@@ -1,0 +1,7 @@
+.vscode
+/bin/ff*
+/public/storage
+/storage
+/vendor
+.env
+npm-debug.log
