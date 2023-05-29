@@ -24,10 +24,9 @@ class UploadImagesController extends Controller {
         foreach($files as $file) {
             $mime = explode('/', $file->getClientMimeType())[0];
 
-            switch( $mime ) {
-                case 'video': case 'image':
-                    $name = sha1(date('YmdHis') . str_random(30));
+            $name = sha1(date('YmdHis') . str_random(30));
 
+            switch( $mime ) {
                 case 'video':
                     $save_name = $name . '.' . $file->getClientOriginalExtension();
                     $resize_name = $name . str_random(2) . '.' . $file->getClientOriginalExtension();
@@ -54,14 +53,16 @@ class UploadImagesController extends Controller {
                             $constraints->aspectRatio();
                         })->save($this->filesPath . '/thumbs/' . $resize_name, 60);
 
-                    Image::make($file)->resize(1280, null, function ($constraints){
-                        $constraints->aspectRatio();
-                    })->save($this->filesPath . '/' . $save_name, 90);
+
+                    $image = Image::make($file);
+                    $image->save($this->filesPath . '/' . $save_name, 80);
 
                     $upload = new Upload();
                     $upload->filename = $save_name;
-
-                    $real_path = realpath($this->filesPath . '/' . $save_name);
+                    $upload->userId = auth()->user()->id;
+                    $upload->playlistId = $request->playlistId;
+                    $upload->notes = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $upload->position = 0;
 
                     $upload->active = 1;
                     $upload->duration = 10;
