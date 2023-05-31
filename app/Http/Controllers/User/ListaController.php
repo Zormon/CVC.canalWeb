@@ -35,10 +35,9 @@ class UserListaController extends Controller {
         }
 
         $user = DB::table('users')->where('id', [auth()->user()->id])->first();
-        $max_listas = $user->max_lists - count($playlists);
         $encoding_queue = DB::table('encode_queues')->where('userId', [auth()->user()->id])->count();
 
-        return view('lista.index', ["encoding_queue" => $encoding_queue, 'max_listas' => $max_listas, 'playlists' => $playlists, 'counter' => $counter]);
+        return view('lista.index', ["encoding_queue" => $encoding_queue, 'playlists' => $playlists, 'counter' => $counter]);
     }
 
     public function listVideos($id, Request $request) {

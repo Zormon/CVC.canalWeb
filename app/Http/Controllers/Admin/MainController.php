@@ -67,14 +67,13 @@ class AdminController extends Controller {
         }
 
         $user = DB::table('users')->where('id', [$id])->first();
-        $max_listas = $user->max_lists - count($playlists);
 
         $encoding_queue = DB::table('encode_queues')->count();
         $active_lists = DB::table('playlists')->count();
         $active_media = DB::table('uploads')->where("active",1)->count();
         $inactive_media = DB::table('uploads')->where("active",0)->count();
 
-        return view('lista.admin.index', ["encoding_queue" => $encoding_queue, "active_lists" => $active_lists, "active_media" => $active_media, "inactive_media" => $inactive_media,'id' => $id, 'playlists' => $playlists, 'max_listas' => $max_listas, 'counter' => $counter]);
+        return view('lista.admin.index', ["encoding_queue" => $encoding_queue, "active_lists" => $active_lists, "active_media" => $active_media, "inactive_media" => $inactive_media,'id' => $id, 'playlists' => $playlists, 'counter' => $counter]);
 
     }
 
@@ -91,14 +90,13 @@ class AdminController extends Controller {
         }
 
         $user = DB::table('users')->where('id', [$id])->first();
-        $max_listas = $user->max_lists - count($playlists);
 
         $encoding_queue = DB::table('encode_queues')->count();
         $active_lists = DB::table('playlists')->count();
         $active_media = DB::table('uploads')->where("active",1)->count();
         $inactive_media = DB::table('uploads')->where("active",0)->count();
 
-        return view('lista.index', ["encoding_queue" => $encoding_queue, "active_lists" => $active_lists, "active_media" => $active_media, "inactive_media" => $inactive_media,'playlists' => $playlists, 'max_listas' => $max_listas, 'counter' => $counter]);
+        return view('lista.index', ["encoding_queue" => $encoding_queue, "active_lists" => $active_lists, "active_media" => $active_media, "inactive_media" => $inactive_media,'playlists' => $playlists, 'counter' => $counter]);
     }
 
     public function edituser(Request $request, $id) {
@@ -130,14 +128,12 @@ class AdminController extends Controller {
                 'username' => $data['username'],
                 'schedule' => json_encode($data['schedule']),
                 'address' => $data['address'],
-                'max_lists' => $data['max_lists'],
                 'notes' => $data['notes']
             ]
         );
 
         unset($data['_token']);
         unset($data['name']);
-        unset($data['max_lists']);
 
         $usrId = $data['id'];
         unset($data['id']);

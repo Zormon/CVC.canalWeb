@@ -37,20 +37,16 @@ class UserController extends Controller {
             DB::table('users')->insert(['id'=> auth()->user()->id]);
         }
 
-        if(empty($data['max_lists'])){
-            $data['max_lists'] = 0;
-        }
-
         if(!empty($data['password']) AND ($data['password'] == $data['password_confirmation'])){
             $password = bcrypt($request->get('password'));
             DB::table('users')->where('id',[auth()->user()->id])->update(['password' => $password]);
         }
 
         $data['schedule'] = json_encode($data['schedule']);
-        DB::table('users')->where('id',[auth()->user()->id])->update(['schedule' => $data['schedule'], 'max_lists' => $data['max_lists']]);
+        DB::table('users')->where('id',[auth()->user()->id])->update(['schedule' => $data['schedule']]);
 
         unset($data['_token']);     unset($data['name']);
-        unset($data['max_lists']);  unset($data['id']);
+        unset($data['id']);
         unset($data['password']);   unset($data['password_confirmation']);
 
         if ( !is_dir($this->logos_path) ) { mkdir($this->logos_path, 0777); }

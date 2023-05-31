@@ -3,12 +3,8 @@
 @section('content')
 
 <div class="card-header">{{ __('Playlists') }}
-    @if ($max_listas == 0)
-        <button type="button" class="float-right btn btn-secondary" disabled><i class="fas fa-plus"></i> {{__('Playlist')}}: <span class="badge badge-light badge-pill">{{ $max_listas }}</span></button>
-    @else
-        @if (auth()->user()->hasRole('admin'))
-            <button type="button" class="newlist float-right btn btn-primary"><i class="fas fa-plus"></i> {{__('Playlist')}}: <span class="badge badge-light badge-pill">{{ $max_listas }}</span></button>
-        @endif
+    @if (auth()->user()->hasRole('admin'))
+        <button type="button" class="newlist float-right btn btn-primary"><i class="fas fa-plus"></i> {{__('Playlist')}}</button>
     @endif
 </div>
 

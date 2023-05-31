@@ -79,15 +79,6 @@
                         </div>
 
                         <div class="form-group row">
-                                <label for="notes" class="col-md-4 col-form-label text-md-right">{{ __('Max Playlists') }}</label>
-
-                                <div class="col-md-6">
-                                    <input placeholder="{{ __('Num of playlists') }}" id="max_lists" type="number" class="form-control" name="max_lists" value="{{ $user->max_lists }}" autocomplete="false">
-                                </div>
-                        </div>
-
-
-                        <div class="form-group row">
                             <label for="notes" class="col-md-4 col-form-label text-md-right">{{ __('Notes') }}</label>
 
                             <div class="col-md-6">

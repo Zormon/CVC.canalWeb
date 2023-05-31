@@ -164,16 +164,10 @@ class AdminListaController extends Controller {
         $request->user()->authorizeRoles(['admin']);
         $playlists = DB::table('playlists')->get();
         $user = DB::table('users')->where('id', [$userid])->first();
-        $max_listas = $user->max_lists - count($playlists);
 
-        if($max_listas > 0){
-            DB::table('playlists')->insert(['userId' => $userid, 'name' => __('New Untitled playlist')]);
-            header('Content-Type: application/json');
-            echo '{"message": "success"}';
-        } else {
-            header('Content-Type: application/json');
-            echo '{"message": "error"}';
-        }
+        DB::table('playlists')->insert(['userId' => $userid, 'name' => __('New Untitled playlist')]);
+        header('Content-Type: application/json');
+        echo '{"message": "success"}';
     }
 
     public function listVideosJson() {
