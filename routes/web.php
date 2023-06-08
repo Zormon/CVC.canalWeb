@@ -20,6 +20,8 @@ Route::post('/lista/images-save', 'UploadImagesController@store');
 Route::get('/user/edit', 'UserController@index')->name('edituser');
 Route::post('/user/edit/save', 'UserController@store')->name('saveuser');
 
+Route::get('/issues', 'HomeController@issues')->name('issues');
+
 Route::get('/users', 'AdminController@userlist')->name('userlist');
 Route::get('/users/{id}/lista', 'AdminController@userentrylist')->name('userentrylist');
 Route::get('/users/edit/{id}', 'AdminController@edituser')->name('edituser.profile');

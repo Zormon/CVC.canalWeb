@@ -128,6 +128,7 @@
                     <i class="ni ni-bullet-list-67 text-red"></i> {{ __('User\'s list') }}
                     </a>
                 </li>
+
             @endif
 
             @if(Auth::user()->hasRole('user'))
@@ -141,8 +142,8 @@
             @endif
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('edituser') }}">
-                    <i class="ni ni-single-02 text-yellow"></i> {{ __('Edit Profile') }}
+                <a class="nav-link" href="{{ route('issues') }} ">
+                    <i class="ni ni-support-16 text-purple"></i> {{ __('Issues') }}
                 </a>
             </li>
 
@@ -163,9 +164,11 @@
         <hr class="my-3">
         <ul class="navbar-nav mb-md-3">
           <li class="nav-item">
+            <!--
             <a class="nav-link" href="{{ env('APP_MANUAL_CONTROL') }}">
               <i class="ni ni-box-2"></i> {{ __('Download Manual') }}
             </a>
+-->
           </li>
         </ul>
       </div>

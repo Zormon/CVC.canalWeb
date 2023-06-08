@@ -21,4 +21,8 @@ class HomeController extends Controller {
             return view('home', ["last_visit" => $user->last_visit]);
         }
     }
+
+    public function issues(Request $request) {
+        return view('issues');
+    }
 }
