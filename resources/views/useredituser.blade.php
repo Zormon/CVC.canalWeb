@@ -14,7 +14,6 @@
                          </div>
                     @endif
 
-
                     <form method="POST" enctype="multipart/form-data" action="{{ route('saveuser') }}" autocomplete="off" class="needs-validation" novalidate>
                         @csrf
 

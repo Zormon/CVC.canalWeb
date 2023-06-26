@@ -27,38 +27,47 @@
                                 </div>
                             </div>
 
-                            <div class="input-group input-group-lg">
-                                <input type="text" class="listatitle form-control form-control-lg font-weight-bold" aria-label="Titulo lista" aria-describedby="listaHelp" data-id="{{ $lista->id }}" value="{{ $lista->name }}">
+                            <div class="input-group">
+                                <input type="text" class="listatitle form-control form-control-lg font-weight-bold" data-id="{{ $lista->id }}" value="{{ $lista->name }}">
                                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteLista"><i class="fas fa-trash"></i></button>
                             </div>
-                            
-                            <div class="input-group input-group-lg">
-                                <input type="text" placeholder="{{ __('Music Json URL') }}" class="musicURL form-control form-control-lg font-weight-bold" aria-label="URL musica" aria-describedby="listaHelp" data-id="{{ $lista->id }}" value="{{ $lista->musicURL }}">
-                                <select name="zonaGuardias" class="zonaGuardias" data-id="{{ $lista->id }}">
-                                    <option value="0">Sin guardias</option>
-                                    <option value="7">Las Palmas de GC</option>
-                                    <option value="17">Telde</option>
-                                    <option value="3">Arucas</option>
-                                    <option value="5">Gáldar / Guía</option>
-                                    <option value="1">Agaete</option>
-                                    <option value="2">Aguimes / Ingenio</option>
-                                    <option value="4">Firgas</option>
-                                    <option value="6">La Aldea de San Nicolás</option>
-                                    <option value="8">Mogán</option>
-                                    <option value="9">Moya</option>
-                                    <option value="10">San Bartolomé de Tirajana</option>
-                                    <option value="11">San Bartolomé de Tirajana (Casco)</option>
-                                    <option value="12">San Mateo</option>
-                                    <option value="13">Santa Brígida</option>
-                                    <option value="14">Santa Lucía de Tirajana</option>
-                                    <option value="15">Santa Lucía de Tirajana</option>
-                                    <option value="16">Tejeda - Artenara</option>
-                                    <option value="18">Teror</option>
-                                    <option value="19">Valleseco</option>
-                                    <option value="20">Valsequillo</option>
-                                </select>
-                            </div>
 
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" placeholder="{{ __('Music Json URL') }}" class="musicURL form-control" data-id="{{ $lista->id }}" value="{{ $lista->musicURL }}">
+                                </div>
+                                <div class="col-1">
+                                    <input type="number" placeholder="1280" class="widthRes form-control" data-id="{{ $lista->id }}" value="{{ $lista->Screen_W }}">
+                                </div>
+                                <div class="col-1">
+                                    <input type="number" placeholder="720" class="heightRes form-control" data-id="{{ $lista->id }}" value="{{ $lista->Screen_H }}">
+                                </div>                                
+                                <div class="col-4">
+                                    <select name="zonaGuardias" class="zonaGuardias form-control" data-id="{{ $lista->id }}">
+                                        <option value="0">Sin guardias</option>
+                                        <option value="7">Las Palmas de GC</option>
+                                        <option value="17">Telde</option>
+                                        <option value="3">Arucas</option>
+                                        <option value="5">Gáldar / Guía</option>
+                                        <option value="1">Agaete</option>
+                                        <option value="2">Aguimes / Ingenio</option>
+                                        <option value="4">Firgas</option>
+                                        <option value="6">La Aldea de San Nicolás</option>
+                                        <option value="8">Mogán</option>
+                                        <option value="9">Moya</option>
+                                        <option value="10">San Bartolomé de Tirajana</option>
+                                        <option value="11">San Bartolomé de Tirajana (Casco)</option>
+                                        <option value="12">San Mateo</option>
+                                        <option value="13">Santa Brígida</option>
+                                        <option value="14">Santa Lucía de Tirajana</option>
+                                        <option value="15">Santa Lucía de Tirajana</option>
+                                        <option value="16">Tejeda - Artenara</option>
+                                        <option value="18">Teror</option>
+                                        <option value="19">Valleseco</option>
+                                        <option value="20">Valsequillo</option>
+                                    </select>
+                                </div>
+                            </div>
                             
 
                             <div class="fallback"><p><input type="file" name="file" multiple></p></div>
@@ -297,6 +306,18 @@
 
     $('.musicURL').change(function(e){
         sendData.data = JSON.stringify( new Array({'id':this.getAttribute('data-id'), 'musicURL':this.value}) )
+        sendData.url = '/usrlist/{{ $id }}/lista/edit'
+        $.ajax(sendData)
+    })
+
+    $('.widthRes').change(function(e){
+        sendData.data = JSON.stringify( new Array({'id':this.getAttribute('data-id'), 'Screen_W':this.value || '1280'}) )
+        sendData.url = '/usrlist/{{ $id }}/lista/edit'
+        $.ajax(sendData)
+    })
+    
+    $('.heightRes').change(function(e){
+        sendData.data = JSON.stringify( new Array({'id':this.getAttribute('data-id'), 'Screen_H':this.value || '720'}) )
         sendData.url = '/usrlist/{{ $id }}/lista/edit'
         $.ajax(sendData)
     })

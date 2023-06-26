@@ -91,6 +91,8 @@
     "AM":"Encendido",
     "PM":"Apagado",
     "Music Json URL":"URL de musica",
+    "Width":"Ancho",
+    "Height":"Alto",
     "Volume":"Volumen",
     "Transition": "Transición"
 }

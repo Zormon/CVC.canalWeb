@@ -1,7 +1,5 @@
-.vscode
-/bin/ff*
+/node_modules
 /public/storage
-/storage
+/storage/*.key
 /vendor
 .env
-npm-debug.log

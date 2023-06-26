@@ -1,0 +1,11 @@
+{
+    "search.exclude": {
+        "**/*app/Console": true,
+        "**/*app/Exceptions": true,
+        "**/*app/Providers": true,
+        "**/*public/storage": true,
+        "**/*storage": true,
+        "**/*tests": true,
+        "**/*vendor": true
+    }
+}

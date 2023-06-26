@@ -30,13 +30,17 @@ foreach($rows as $row) {
     $file = pathinfo($row['filename']);
 
     if( !file_exists($storage.$file['filename'].'_enc.mp4') ) {
+        $targetSize = $conn->query('SELECT Screen_W,Screen_H FROM playlists WHERE id='.$row['playlistId'])->fetch();
+        $targetW = $targetSize['Screen_W'];
+        $targetH = $targetSize['Screen_H'];
+        
         $duration_gross = shell_exec($ffmpeg.' -i '.$storage.$row['filename'].' 2>&1 | grep Duration | cut -d \' \' -f 4 | sed s/,//');
         $duration_secs = seconds_from_time($duration_gross);
 
         $sql = "UPDATE encode_queues SET encoding=1 WHERE id=".$row['id'];
         $result = $conn->query($sql);
 
-        $salida = shell_exec($ffmpeg.' -i '.$storage.$row['filename'].' -vcodec libx264 -pix_fmt yuv420p -profile:v baseline -level 3 '.$storage.$file['filename'].'_enc.mp4 2>&1');
+        $salida = shell_exec($ffmpeg.' -i '.$storage.$row['filename'].' -vcodec libx264 -vf scale='.$targetW.':'.$targetH.' -pix_fmt yuv420p -profile:v baseline -level 3 '.$storage.$file['filename'].'_enc.mp4 2>&1');
         $salida_thumb = shell_exec($ffmpeg.' -i '.$storage.$row['filename'].' -ss 00:00:2.435 -vframes 1 -filter:v scale="250:-1" '.$storage_thumbs.$file['filename'].'_thumb.png 2>&1');
         unlink($storage.$row['filename']);
         
