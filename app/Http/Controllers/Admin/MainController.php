@@ -15,11 +15,8 @@ class AdminController extends Controller {
         $users = DB::table('users')->whereRaw('id!=1')->orderBy('id','DESC')->get();
 
         $encoding_queue = DB::table('encode_queues')->count();
-        $active_lists = DB::table('playlists')->count();
-        $active_media = DB::table('uploads')->where("active",1)->count();
-        $inactive_media = DB::table('uploads')->where("active",0)->count();
 
-        return view('userlist', ["encoding_queue" => $encoding_queue, "active_lists" => $active_lists, "active_media" => $active_media, "inactive_media" => $inactive_media,'users' => $users]);
+        return view('userlist', ['users' => $users]);
     }
 
     public function ffmpeg(Request $request) {
@@ -46,12 +43,7 @@ class AdminController extends Controller {
     public function userswithplaylist() {
         $users = DB::table('users')->whereRaw('id!=1')->orderBy('id','DESC')->get();
 
-        $encoding_queue = DB::table('encode_queues')->count();
-        $active_lists = DB::table('playlists')->count();
-        $active_media = DB::table('uploads')->where("active",1)->count();
-        $inactive_media = DB::table('uploads')->where("active",0)->count();
-
-        return view('userslistplaylists', ["encoding_queue" => $encoding_queue, "active_lists" => $active_lists, "active_media" => $active_media, "inactive_media" => $inactive_media,'users' => $users]);
+        return view('userslistplaylists', ['users' => $users]);
     }
 
     public function userplaylists($id) {
@@ -68,12 +60,7 @@ class AdminController extends Controller {
 
         $user = DB::table('users')->where('id', [$id])->first();
 
-        $encoding_queue = DB::table('encode_queues')->count();
-        $active_lists = DB::table('playlists')->count();
-        $active_media = DB::table('uploads')->where("active",1)->count();
-        $inactive_media = DB::table('uploads')->where("active",0)->count();
-
-        return view('lista.admin.index', ["encoding_queue" => $encoding_queue, "active_lists" => $active_lists, "active_media" => $active_media, "inactive_media" => $inactive_media,'id' => $id, 'playlists' => $playlists, 'counter' => $counter]);
+        return view('lista.admin.index', ['id' => $id, 'playlists' => $playlists, 'counter' => $counter]);
 
     }
 
@@ -91,12 +78,7 @@ class AdminController extends Controller {
 
         $user = DB::table('users')->where('id', [$id])->first();
 
-        $encoding_queue = DB::table('encode_queues')->count();
-        $active_lists = DB::table('playlists')->count();
-        $active_media = DB::table('uploads')->where("active",1)->count();
-        $inactive_media = DB::table('uploads')->where("active",0)->count();
-
-        return view('lista.index', ["encoding_queue" => $encoding_queue, "active_lists" => $active_lists, "active_media" => $active_media, "inactive_media" => $inactive_media,'playlists' => $playlists, 'counter' => $counter]);
+        return view('lista.index', ['playlists' => $playlists, 'counter' => $counter]);
     }
 
     public function edituser(Request $request, $id) {
@@ -105,12 +87,7 @@ class AdminController extends Controller {
         $userinfo = DB::table('users')->where('id', $id)->first();
         $userinfo->schedule = json_decode($userinfo->schedule);
 
-        $encoding_queue = DB::table('encode_queues')->count();
-        $active_lists = DB::table('playlists')->count();
-        $active_media = DB::table('uploads')->where("active",1)->count();
-        $inactive_media = DB::table('uploads')->where("active",0)->count();
-
-        return view('edituser', ["encoding_queue" => $encoding_queue, "active_lists" => $active_lists, "active_media" => $active_media, "inactive_media" => $inactive_media, 'user' => $userinfo]);
+        return view('edituser', ['user' => $userinfo]);
     }
 
     public function profilestore(Request $request) {
