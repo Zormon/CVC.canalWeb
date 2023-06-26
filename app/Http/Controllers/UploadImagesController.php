@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Upload;
 use App\EncodeQueue;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Intervention\Image\Facades\Image;
 
@@ -45,6 +46,10 @@ class UploadImagesController extends Controller {
                 break;
 
                 case 'image':
+                    $targetSize = DB::table('playlists')->where('id', $request->playlistId)->first();
+                    $targetW = $targetSize->Screen_W;
+                    $targetH = $targetSize->Screen_H;
+
                     $save_name = $name . '.jpg';
                     $resize_name = $name . str_random(2) . '.jpg';
 
@@ -55,6 +60,7 @@ class UploadImagesController extends Controller {
 
 
                     $image = Image::make($file);
+                    $image->resize($targetW, $targetH);
                     $image->save($this->filesPath . '/' . $save_name, 80);
 
                     $upload = new Upload();
