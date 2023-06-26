@@ -39,7 +39,6 @@ Route::post('/usrlist/{id}/lista/pendiente/del','AdminListaController@cancelarCo
 Route::post('/usrlist/{id}/lista/edit','AdminListaController@updateLista');
 Route::post('/usrlist/{id}/lista/del','AdminListaController@deleteLista');
 Route::post('/usrlist/{id}/lista/new','AdminListaController@newLista');
-Route::post('/usrlist/{id}/lista/images-save', 'AdminUploadImagesController@store')->name("adminstoreimg");
 
 Route::get('/ffmpeg', 'AdminController@ffmpeg')->name('ffmpeg');
 Route::get('/EncodeQueue', 'AdminController@EncodeQueue')->name('EncodeQueue');

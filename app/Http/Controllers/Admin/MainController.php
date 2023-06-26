@@ -14,8 +14,6 @@ class AdminController extends Controller {
     public function userlist(Request $request) {
         $users = DB::table('users')->whereRaw('id!=1')->orderBy('id','DESC')->get();
 
-        $encoding_queue = DB::table('encode_queues')->count();
-
         return view('userlist', ['users' => $users]);
     }
 
