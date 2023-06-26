@@ -23,13 +23,13 @@ class AdminController extends Controller {
     }
 
     public function ffmpeg(Request $request) {
-        $salida = shell_exec('/usr/bin/php /var/www/panel.comunicacionvisualcanarias.com/bin/cron_ffmpeg.php > /dev/null 2>&1 &');
+        $salida = shell_exec(env('PHP_BINARY').' '.env('ENCODING_SCRIPT').' > /dev/null 2>&1 &');
 
         return redirect()->back()->with("success",__("Successfully!"));
     }
     
     public function EncodeQueue(Request $request) {
-        $salida = shell_exec('/usr/bin/php /var/www/panel.comunicacionvisualcanarias.com/bin/cron_ffmpeg.php > /dev/null 2>&1 &');
+        $salida = shell_exec(env('PHP_BINARY').' '.env('ENCODING_SCRIPT').' > /dev/null 2>&1 &');
 
         return redirect()->back()->with("success",__("Successfully!"));
     }
@@ -59,8 +59,8 @@ class AdminController extends Controller {
         $playlists = DB::table('playlists')->where('userId', [$id])->orderBy('id','DESC')->get();
 
         foreach ($playlists as $key => $value) {
-            $active = DB::table('uploads')->where('playlistId',$value->id)->where('userId', [$id])->where('active',1)->count();
-            $noactive = DB::table('uploads')->where('playlistId',$value->id)->where('userId', [$id])->where('active',0)->count();
+            $active = DB::table('uploads')->where('playlistId',$value->id)->where('active',1)->count();
+            $noactive = DB::table('uploads')->where('playlistId',$value->id)->where('active',0)->count();
 
             $counter[$value->id]['active'] = $active;
             $counter[$value->id]['noactive'] = $noactive;
@@ -82,8 +82,8 @@ class AdminController extends Controller {
         $playlists = DB::table('playlists')->where('userId', [$id])->orderBy('id','DESC')->get();
 
         foreach ($playlists as $key => $value) {
-            $active = DB::table('uploads')->where('playlistId',$value->id)->where('userId', [$id])->where('active',1)->count();
-            $noactive = DB::table('uploads')->where('playlistId',$value->id)->where('userId', [$id])->where('active',0)->count();
+            $active = DB::table('uploads')->where('playlistId',$value->id)->where('active',1)->count();
+            $noactive = DB::table('uploads')->where('playlistId',$value->id)->where('active',0)->count();
 
             $counter[$value->id]['active'] = $active;
             $counter[$value->id]['noactive'] = $noactive;
