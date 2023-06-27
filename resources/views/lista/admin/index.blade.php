@@ -15,11 +15,12 @@
     <div class="list-group list-group-flush">
         @foreach ($playlists as $playlist)
             <a href="{{route('admin.editentry', ['id' => $id,'pid' => $playlist->id])}}" class="list-group-item d-flex justify-content-between align-items-center">
-                <h3 class="font-weight-bold text-primary ml-2"><i class="ni ni-tv-2"></i>&nbsp;&nbsp;{{ $playlist->name }} | <small>{{ $playlist->id }}</small></h3>
-                <h5>{{ $playlist->Screen_W }} x {{ $playlist->Screen_H }}</h5>
-                <h5>{{ $playlist->updated_at }}</h5>
-                <div><span class="badge badge-success badge-pill">{{ $counter[$playlist->id]['active'] }}</span>
-                <span class="badge badge-secondary badge-pill">{{ $counter[$playlist->id]['noactive'] }}</span></div>
+                <h3 class="font-weight-bold text-primary ml-2">{{ $playlist->name }} <em><small>( {{ $playlist->Screen_W }} x {{ $playlist->Screen_H }} )</small></em></h3>
+                <div>
+                    <span class="badge badge-success badge-pill">{{ $counter[$playlist->id]['active'] }}</span>
+                    <span class="badge badge-secondary badge-pill">{{ $counter[$playlist->id]['noactive'] }}</span>
+                    <small>{{ $playlist->updated_at }}</small>
+                </div>
             </a>
         @endforeach
     </div>
