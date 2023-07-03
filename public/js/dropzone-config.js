@@ -1,7 +1,7 @@
 var total_photos_counter = 0;
 Dropzone.options.myDropzone = {
     uploadMultiple: true,
-    parallelUploads: 3,
+    parallelUploads: 10,
     maxFilesize: 120,
     addRemoveLinks: false,
     acceptedFiles: 'image/*,video/*',
