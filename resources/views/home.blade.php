@@ -14,8 +14,6 @@
                         <h2 class="text-danger">{{ __('You\'re admin!') }}</h2>
                         <h5>{{ __('Welcome to the administration area.') }}</h5>
 
-                        <a href="/ffmpeg">Procesar ahora cola de codificado</a>
-                        <br />
                         @if (count($pendientes) > 0)
                         <div class="row">
                             <div class="col">

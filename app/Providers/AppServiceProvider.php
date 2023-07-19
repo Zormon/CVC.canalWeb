@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('*', function($view){
             $view_name = str_replace('.', '-', $view->getName());
             view()->share('view_name', $view_name);
+
+            $user = Auth::user();
+            if ($user)  { view()->share('isAdmin', $user->hasRole('admin')); }
+            else        { view()->share('isAdmin', false); }
         });
 
     }

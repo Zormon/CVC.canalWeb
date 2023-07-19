@@ -1,7 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
+use App\User;
+use App\Playlist;
 use Illuminate\Support\Facades\Storage;
 
 class DeployController extends Controller {
@@ -23,39 +24,39 @@ class DeployController extends Controller {
     }
 
     private function devPower() {
-        $playlist = DB::table('playlists')->where('id',$this->id)->first();
-        $user = DB::table('users')->where('id', $playlist->userId)->first();	 
+        $playlist = Playlist::where('id',$this->id)->first();
+        $user = User::where('id', $playlist->userId)->first();	 
 	 
-		$schedule = json_decode( $user->schedule );
+		$power = json_decode( $user->power );
 
         $resp['mode'] = 'mem';
 		$resp['exclude'] = [0]; // Excluir dias - TEMPORAL
 
 		// ------- Encendido ------
-		$resp['on'][0] = $schedule->M->AM??null; // Lunes
-		$resp['on'][1] = $schedule->T->AM??null; // Martes
-		$resp['on'][2] = $schedule->W->AM??null; // Miercoles
-		$resp['on'][3] = $schedule->TH->AM??null; // Jueves
-		$resp['on'][4] = $schedule->F->AM??null; // Viernes
-		$resp['on'][5] = $schedule->S->AM??null; // Sabado
-		$resp['on'][6] = $schedule->SU->AM??null; // Domingo
+		$resp['on'][0] = $power[0]->ON??null; // Lunes
+		$resp['on'][1] = $power[1]->ON??null; // Martes
+		$resp['on'][2] = $power[2]->ON??null; // Miercoles
+		$resp['on'][3] = $power[3]->ON??null; // Jueves
+		$resp['on'][4] = $power[4]->ON??null; // Viernes
+		$resp['on'][5] = $power[5]->ON??null; // Sabado
+		$resp['on'][6] = $power[6]->ON??null; // Domingo
 		
 		
 		// ------- Apagado ------
-		$resp['off'][0] = $schedule->M->PM??null; // Lunes
-		$resp['off'][1] = $schedule->T->PM??null; // Martes
-		$resp['off'][2] = $schedule->W->PM??null; // Miercoles
-		$resp['off'][3] = $schedule->TH->PM??null; // Jueves
-		$resp['off'][4] = $schedule->F->PM??null; // Viernes
-		$resp['off'][5] = $schedule->S->PM??null; // Sabado
-		$resp['off'][6] = $schedule->SU->PM??null; // Domingo
+		$resp['off'][0] = $power[0]->OFF??null; // Lunes
+		$resp['off'][1] = $power[1]->OFF??null; // Martes
+		$resp['off'][2] = $power[2]->OFF??null; // Miercoles
+		$resp['off'][3] = $power[3]->OFF??null; // Jueves
+		$resp['off'][4] = $power[4]->OFF??null; // Viernes
+		$resp['off'][5] = $power[5]->OFF??null; // Sabado
+		$resp['off'][6] = $power[6]->OFF??null; // Domingo
 		
         return $resp;
     }
 
     private function devMedia() {
-        $playlist = DB::table('playlists')->where('id', $this->id)->first();
-        $videos = DB::table('uploads')->where('playlistId', $this->id)->whereRaw('active=1')->orderBy('position','ASC')->get();
+        $playlist = Playlist::where('id', $this->id)->first();
+        $videos = Upload::where('playlistId', $this->id)->whereRaw('active=1')->orderBy('position','ASC')->get();
         $currentContenidos = array();
 
         foreach($videos as $vid){
@@ -65,14 +66,14 @@ class DeployController extends Controller {
                 'duration' => $vid->duration,
                 'volume' => $vid->volume,
                 'id' => $vid->id,
-				'nombre' => $vid->notes, 
+				'nombre' => $vid->title, 
                 'transition' => $vid->transition,
                 'archivo' => $vid->filename,
                 'lista' => $playlist->name,
-                'desde' => $vid->broadcast_from,
-                'hasta' => $vid->broadcast_to,
-                'horaDesde' => $vid->time_from,
-                'horaHasta' => $vid->time_to
+                'desde' => $vid->dateFrom,
+                'hasta' => $vid->dateTo,
+                'horaDesde' => $vid->timeFrom,
+                'horaHasta' => $vid->timeTo
             );
         }
 
@@ -128,7 +129,7 @@ class DeployController extends Controller {
         date_default_timezone_set("Atlantic/Canary");
 
         $this->id = $id;
-        $playlist = DB::table('playlists')->where('id', $id)->first();
+        $playlist = Playlist::where('id', $id)->first();
         if (!!$playlist->musicURL) {
             $this->remoteMusicJson = @json_decode(file_get_contents($playlist->musicURL));
         }
@@ -143,8 +144,8 @@ class DeployController extends Controller {
         $json['catalog']['music'] = $this->devMusicCatalog();
         $json['power'] = $this->devPower();
 
-        if ($playlist->guardias != 0) {
-            $this->remoteGuardiasJson = @json_decode(file_get_contents('https://api.farmavisioncanarias.com/guardias/'.$playlist->guardias));
+        if ($playlist->zonaGuardias != 0) {
+            $this->remoteGuardiasJson = @json_decode(file_get_contents('https://api.farmavisioncanarias.com/guardias/'.$playlist->zonaGuardias));
             $json['guardias'] = $this->devGuardias();
         }
 

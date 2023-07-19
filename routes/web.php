@@ -1,46 +1,45 @@
 <?php
-Route::get('/', function () { return view('welcome'); });
-Auth::routes();
+Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
+Route::get('/', 'HomeController@root');
 
-
+// Deploy
 Route::get('/deploy/{id}', 'DeployController@json')->name('json');
 
-Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/lista', 'UserListaController@index')->name('lista');
-Route::get('/lista/{id}', 'UserListaController@listVideos')->name('editentry');
-Route::get('/lista/editvideo/{id}', 'UserListaController@editVideos')->name('editvideos');
-Route::post('/lista/sort','UserListaController@updateVideo');
-Route::post('/lista/media','UserListaController@updateVideo');
-Route::post('/lista/media/del','UserListaController@deleteVideo');
-Route::post('/lista/pendiente/del','UserListaController@cancelarCodificacion');
-Route::post('/lista/edit','UserListaController@updateLista');
-Route::post('/lista/images-save', 'UploadImagesController@store');
-
-Route::get('/user/edit', 'UserController@index')->name('edituser');
-Route::post('/user/edit/save', 'UserController@store')->name('saveuser');
-
+// Home
+Route::get('/home', 'HomeController@home')->name('home');
 Route::get('/issues', 'HomeController@issues')->name('issues');
 
-Route::get('/users', 'AdminController@userlist')->name('userlist');
-Route::get('/users/{id}/lista', 'AdminController@userentrylist')->name('userentrylist');
-Route::get('/users/edit/{id}', 'AdminController@edituser')->name('edituser.profile');
-Route::post('/users/edit/{id}/save', 'AdminController@profilestore')->name('saveuser.profile');
-Route::post('/users/s','AdminController@searchusers');
 
-Route::get('/usrlist', 'AdminController@userswithplaylist')->name('usersplaylist');
-Route::get('/usrlist/{id}', 'AdminController@userplaylists')->name('userplaylists');
-Route::get('/usrlist/{id}/lista/{pid}', 'AdminListaController@listVideos')->name('admin.editentry');
-Route::get('/usrlist/{id}/lista/editvideo/{id2}', 'AdminListaController@editVideos')->name('admin.editvideos');
-Route::post('/usrlist/{id}/lista/sort','AdminListaController@updateVideo');
-Route::post('/usrlist/{id}/lista/media','AdminListaController@updateVideo');
-Route::post('/usrlist/{id}/lista/media/del','AdminListaController@deleteVideo');
-Route::post('/usrlist/{id}/lista/pendiente/del','AdminListaController@cancelarCodificacion');
-Route::post('/usrlist/{id}/lista/edit','AdminListaController@updateLista');
-Route::post('/usrlist/{id}/lista/del','AdminListaController@deleteLista');
-Route::post('/usrlist/{id}/lista/new','AdminListaController@newLista');
+// Playlist
+Route::get('/playlists/{uId?}', 'PlaylistController@userPlaylists')->name('playlists.user');
+Route::get('/playlist/{plId}', 'PlaylistController@showList')->name('playlist.single');
+Route::post('/playlist', 'PlaylistController@new')->name('playlist');
+Route::put('/playlist/{plId}', 'PlaylistController@edit');
+Route::patch('/playlist/{plId}', 'PlaylistController@updatePositions');
+Route::delete('/playlist/{plId}', 'PlaylistController@delete'); //TODO: Implementar
 
-Route::get('/ffmpeg', 'AdminController@ffmpeg')->name('ffmpeg');
-Route::get('/EncodeQueue', 'AdminController@EncodeQueue')->name('EncodeQueue');
 
+// Media
+Route::patch('/media/{id}','MediaController@update')->name('media.single');
+Route::delete('/media/{id}','MediaController@delete');
+
+
+// Uploads
+Route::post('/upload', 'UploadsController@store'); //TODO: Mover ruta a /media y el controlador a MediaController
+
+
+// Users
+Route::get('/users', 'UserController@showList')->name('users');
+Route::get('/user/{uId}', 'UserController@edit')->name('profile');
+Route::patch('/user/{uId}', 'UserController@update')->name('profile.update');
+Route::delete('/user/{uId}', 'UserController@delete')->name('profile.delete'); //TODO: Implementar
+
+
+// Procesar colas
+Route::get('/EncodeQueue', 'UploadsController@RunEncodingQueue')->name('EncodeQueue');
+
+
+// Test
+Route::get('/dev/phpinfo', 'HomeController@phpinfo')->name('dev.phpinfo');
 
