@@ -2,19 +2,23 @@
 
 @section('content')
 
-@include('modals.playlistData', [
-    'modalAction' => __('Add'),
-    'playlistName' => '',
-    'musicJsonURL' => '',
-    'screenW' => 1280,
-    'screenH' => 720,
-    'zonaGuardias' => 0
-    ])
+@if ($isAdmin)
+    @include('modals.playlistData', [
+        'modalAction' => __('Add'),
+        'playlistName' => '',
+        'musicJsonURL' => '',
+        'screenW' => 1280,
+        'screenH' => 720,
+        'zonaGuardias' => 0
+        ])
+@endif
 
 
 <div class="card-header">
     {{ __('Devices') }}
+    @if ($isAdmin)
     <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#playlistDataModal">{{ __('New playlist') }}</button>
+    @endif
 </div>
 <div class="card-body p-0">
     @if (session('status'))
@@ -51,6 +55,7 @@
     </div>
 </div>
 
+@if ($isAdmin)
 <script type="module">
     import {_$} from "{{ asset('js/exports.js') }}";
     var fetchOptions = {
@@ -76,5 +81,6 @@
         })
     }
 </script>
+@endif
 
 @endsection

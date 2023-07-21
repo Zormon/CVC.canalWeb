@@ -9,11 +9,9 @@
     <script src="{{ asset('vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/argon.min.js') }}"></script>
     <script src="{{ asset('js/html5sortable.js') }}"></script>
-    <script src="{{ asset('js/dropzone.min.js') }}"></script>
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/dropzone.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <link href="{{ asset('img/brand/favicon.png') }}?2" rel="icon" type="image/png">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
@@ -80,7 +78,8 @@
               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
           </li>
         </ul>
-        
+
+        @if ($isAdmin)
         <hr class="my-3">
         <h6 class="navbar-heading text-muted">{{__('Actions')}}</h6>
 
@@ -88,6 +87,7 @@
           <li class="nav-item"><a class="nav-link" href="{{ route('EncodeQueue') }}" target="_blank"><i class="ni ni-button-play text-red"></i>{{ __('Encode queue') }}</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ route('dev.phpinfo') }}" target="_blank"><i class="ni ni-app text-purple"></i>phpinfo</a></li>
         </ul>
+        @endif
       </div>
     </div>
   </nav>
@@ -118,23 +118,5 @@
         </footer>
       </div>
     </div>
-
-    {{--Dropzone Preview Template--}}
-    <div id="preview" style="display: none;">
-      <div class="dz-preview dz-file-preview">
-        <div class="dz-image"><img data-dz-thumbnail /></div>
-        <div class="dz-details">
-          <div class="dz-size"><span data-dz-size></span></div>
-          <div class="dz-filename"><span data-dz-name></span></div>
-        </div>
-        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-        <div class="dz-error-message"><span data-dz-errormessage></span></div>
-        <div class="dz-success-mark"><i class="fas fa-check-circle" style="font-size:54px;"></i></div>
-        <div class="dz-error-mark"><i class="fas fa-exclamation-circle" style="font-size:54px;"></i></div>
-      </div>
-    </div>
-    {{--End of Dropzone Preview Template--}}
-
-    <script src="{{ asset('js/dropzone-config.js') }}"></script>
 </body>
 </html>
