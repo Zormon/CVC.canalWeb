@@ -20,8 +20,11 @@
 
     <div class="card-header">
         <div class="row">
-            <div class="col-10">
+            <div class="col-9">
                 <h1 class="display-4">{{ $playlist->name }} <small>({{$playlist->screenW}} x {{$playlist->screenH}}@if($playlist->zonaGuardias!=0) | guardias @endif @if(!!$playlist->musicURL)| musica @endif)</small></h1>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-block btn-success" data-toggle="modal" data-target="#playlistDataModal" title="{{ __('Upload') }}"><i class="fas fa-edit"></i></button>
             </div>
             @if ($isAdmin)
             <div class="col-1">
