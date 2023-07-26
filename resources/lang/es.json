@@ -71,5 +71,8 @@
     "Edit Profile": "Editar Perfil",
     "Password and password confirmation must be the same": "La contraseña y la confirmación de contraseña deben ser iguales",
     "On / Off": "Encendido / Apagado",
-    "Encode queue": "Codificar cola"
+    "Encode queue": "Codificar cola",
+    "No encode": "No codificar",
+    "Encoding": "Codificando",
+    "Waiting": "En cola"
 }

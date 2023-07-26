@@ -6,12 +6,6 @@ var querySelAll = document.querySelectorAll.bind(document)
 
 
 
-
-
-
-
-
-
 export {
     getById as _$,
     querySel as _$$,

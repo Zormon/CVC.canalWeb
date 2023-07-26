@@ -22,11 +22,10 @@ Route::delete('/playlist/{plId}', 'PlaylistController@delete'); //TODO: Implemen
 
 // Media
 Route::patch('/media/{id}','MediaController@update')->name('media.single');
+Route::post('/media','MediaController@upload')->name('media');
 Route::delete('/media/{id}','MediaController@delete');
-
-
-// Uploads
-Route::post('/upload', 'UploadsController@store'); //TODO: Mover ruta a /media y el controlador a MediaController
+// Procesar colas
+Route::get('/EncodeQueue', 'MediaController@RunEncodingQueue')->name('EncodeQueue');
 
 
 // Users
@@ -34,10 +33,6 @@ Route::get('/users', 'UserController@showList')->name('users');
 Route::get('/user/{uId}', 'UserController@edit')->name('profile');
 Route::patch('/user/{uId}', 'UserController@update')->name('profile.update');
 Route::delete('/user/{uId}', 'UserController@delete')->name('profile.delete'); //TODO: Implementar
-
-
-// Procesar colas
-Route::get('/EncodeQueue', 'UploadsController@RunEncodingQueue')->name('EncodeQueue');
 
 
 // Test
