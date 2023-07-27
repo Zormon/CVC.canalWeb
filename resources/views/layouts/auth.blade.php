@@ -30,7 +30,7 @@
     <link href="{{ asset('vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     
     <!-- Argon CSS -->
-    <link type="text/css" href="{{ asset('css/argon.farma.css') }}" rel="stylesheet">
+    <link type="text/css" href="{{ asset('css/argon.cvc.css') }}" rel="stylesheet">
 </head>
 
 <body class="bg-default">
