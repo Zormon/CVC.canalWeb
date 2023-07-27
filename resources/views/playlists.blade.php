@@ -50,7 +50,7 @@
                 </div>
             </a>
         @empty
-            <a href="{{ env('APP_COMPANY_SUPPORT') }}" class="list-group-item d-flex justify-content-between align-items-center"><h4>{{ __('You have no devices registered to your account.') }}</h4></a>
+            <div class="list-group-item">{{ __('No devices') }}</div>
         @endforelse
     </div>
 </div>

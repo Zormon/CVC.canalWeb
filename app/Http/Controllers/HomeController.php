@@ -26,8 +26,8 @@ class HomeController extends Controller {
         $user = User::where('id', [auth()->user()->id])->first();
 
         if(Auth::user()->hasRole('admin')){
-            $pendientes = EncodeQueue::selectRaw("users.name as name, queue.*")->leftJoin('users', 'userId', '=', 'users.id')->orderBy('queue.id','DESC')->get();
-            return view('home', ['pendientes' => $pendientes, "last_visit" => $user->last_visit],);
+            $queue = EncodeQueue::selectRaw("users.name as username, queue.*")->leftJoin('users', 'userId', '=', 'users.id')->orderBy('queue.id','DESC')->get();
+            return view('home', ['queue' => $queue, "last_visit" => $user->last_visit],);
         } else {
             return view('home', ["last_visit" => $user->last_visit]);
         }

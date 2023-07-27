@@ -222,10 +222,16 @@
     _$('deletePlaylist').onclick = ()=> {
         fetchOptions.method = 'DELETE'
         fetch("{{ route('playlist.single', $playlist->id) }}", fetchOptions).then( (resp)=> {
-            if (resp.status == 200) {
-                window.location.href = "{{ route('playlists.user', $playlist->userId) }}"
-            } else {
+            switch (resp.status) {
+                case 200:
+                    window.location.href = "{{ route('playlists.user', $playlist->userId) }}"    
+                    break;
+                case 409:
+                    alert("{{ __('This playlist has files being encoded. Please wait until it finishes.') }}")
+                    break;
+                default:
                 alert('Error. HTTP CODE: ' + resp.status)
+                    break;
             }
         })
     }
