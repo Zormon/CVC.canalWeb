@@ -7,39 +7,31 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     <script src="{{ asset('vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('js/argon.min.js') }}"></script>
-    <script src="{{ asset('js/html5sortable.js') }}"></script>
+    <script src="{{ asset('vendor/html5sortable/dist/html5sortable.min.js') }}"></script>
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <link href="{{ asset('img/brand/favicon.png') }}?2" rel="icon" type="image/png">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
     <link href="{{ asset('vendor/nucleo/css/nucleo.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
-    <link type="text/css" href="{{ asset('css/argon.farma.css') }}" rel="stylesheet">
-    <script src="{{ asset('vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+    <link type="text/css" href="{{ asset('css/argon.cvc.css') }}" rel="stylesheet">
 </head>
 <body>
-  <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white" id="sidenav-main">
+  <nav class="navbar navbar-vertical fixed-left navbar-expand-md bg-white" id="sidenav-main">
     <div class="container-fluid">
       <!-- Toggler -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main">
         <span class="navbar-toggler-icon"></span>
       </button>
       <!-- Brand -->
-      <a class="navbar-brand pt-0" href="{{ url('/') }}">
-        <img src="{{ asset('img/brand/logo.png') }}" class="navbar-brand-img" alt="{{ config('app.name', 'Farmavision') }}">
-      </a>
+      <img src="{{ asset('img/brand/logo.png') }}" class="navbar-brand-img" alt="{{ config('app.name', 'Farmavision') }}">
       <!-- Collapse -->
       <div class="collapse navbar-collapse" id="sidenav-collapse-main">
         <!-- Collapse header -->
         <div class="navbar-collapse-header d-md-none">
           <div class="row">
-            <div class="col-6 collapse-brand">
-              <a href="{{ url('/') }}"><img src="{{ asset('img/brand/logo.png') }}" alt="{{ config('app.name', 'Canal') }}"></a>
-            </div>
-            <div class="col-6 collapse-close">
+            <div class="col-12 collapse-close">
               <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#sidenav-collapse-main">
                 <span></span><span></span>
               </button>

@@ -12,7 +12,7 @@
     <script src="{{ asset('vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     
     <!-- Argon JS -->
-    <script src="{{ asset('js/argon.min.js') }}"></script>
+    <script src="{{ asset('js/argon.js') }}"></script>
     
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -21,7 +21,6 @@
     
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     
     <!-- Favicon -->
     <link href="{{ asset('img/brand/favicon.png') }}?2" rel="icon" type="image/png">

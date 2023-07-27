@@ -10,9 +10,9 @@
                     <div class="modal-body">
                         <div class="form-group row">
                             @if ($isAdmin)
-                            <input type="file" name="media[]" required multiple accept=".mp4,.mkv,.webm,.png,.jpg,.webp">
+                            <input type="file" class="form-control" name="media[]" required multiple accept=".mp4,.mkv,.webm,.png,.jpg,.webp">
                             @else
-                            <input type="file" name="media[]" required multiple accept="video/*,image/*">
+                            <input type="file" class="form-control" name="media[]" required multiple accept="video/*,image/*">
                             @endif
 
                         </div>

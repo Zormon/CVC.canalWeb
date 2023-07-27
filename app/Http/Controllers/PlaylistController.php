@@ -24,6 +24,8 @@ class PlaylistController extends Controller {
         }
 
         $uId ??= $user->id;
+        $userData = User::where('id', $uId)->first();
+        if (empty($userData))   { abort(404); }
         $playlists = Playlist::where('userId', $uId)->orderBy('id','DESC')->get();
 
         foreach ($playlists as $k => $v) {
@@ -43,9 +45,11 @@ class PlaylistController extends Controller {
         $user = $request->user();
         $user->authorizeRoles(['user','admin']);
 
+        $playlist = Playlist::where('id', $plId)->first();
+        if (empty($playlist))   { abort(404); }
+
         $media = Upload::where('playlistId', $plId)->orderBy('position','ASC')->get();
         $queue = EncodeQueue::where('playlistId', $plId)->orderBy('id','ASC')->get();
-        $playlist = Playlist::where('id', $plId)->first();
 
         return view('playlist', ["queue" => $queue, 'media' => $media, 'playlist' => $playlist, 'uId' => $user->id]);
     }

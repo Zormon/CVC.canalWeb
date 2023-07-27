@@ -26,6 +26,7 @@ class UserController extends Controller  {
         }
 
         $userData = User::where('id', $uId)->first();
+        if (empty($userData))   { abort(404); }
         $userData->power = json_decode($userData->power);
 
         return view('user', ["userData" => $userData]);

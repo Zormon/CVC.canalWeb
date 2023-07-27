@@ -22,7 +22,7 @@
     <div class="card-header">
         <div class="row">
             <div class="col-9">
-                <h1 class="display-4">{{ $playlist->name }} <small>({{$playlist->screenW}} x {{$playlist->screenH}}@if($playlist->zonaGuardias!=0) | guardias @endif @if(!!$playlist->musicURL)| musica @endif)</small></h1>
+                <h1>{{ $playlist->name }} <small>({{$playlist->screenW}} x {{$playlist->screenH}}@if($playlist->zonaGuardias!=0) | guardias @endif @if(!!$playlist->musicURL)| musica @endif)</small></h1>
             </div>
             <div class="col-1">
                 <button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#uploadMediaModal" title="{{ __('Upload') }}"><i class="ni ni-cloud-upload-96"></i></button>

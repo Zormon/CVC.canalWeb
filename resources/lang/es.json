@@ -74,5 +74,7 @@
     "Encode queue": "Codificar cola",
     "No encode": "No codificar",
     "Encoding": "Codificando",
-    "Waiting": "En cola"
+    "Waiting": "En cola",
+    "Profile": "Perfil",
+    "Media": "Contenidos"
 }

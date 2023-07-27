@@ -14,44 +14,49 @@
 @endif
 
 
-<div class="card-header">
-    {{ __('Devices') }}
-    @if ($isAdmin)
-    <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#playlistDataModal">{{ __('New playlist') }}</button>
-    @endif
-</div>
-<div class="card-body p-0">
-    @if (session('status'))
-        <div class="alert alert-success" role="alert">{{ session('status') }}</div>
-    @endif
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-10">
+                <h1>{{ __('Devices') }}</h1>
+            </div>
+            @if ($isAdmin)
+            <div class="col-2">
+                <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#playlistDataModal"><i class="fas fa-plus"></i>&nbsp;&nbsp;{{ __('New playlist') }}</button>
+            </div>
+            @endif
+        </div>
+    </div>
 
-    <div class="list-group list-group-flush">
-        @forelse ($playlists as $playlist)
-            <a href="{{route('playlist.single', ['id' => $playlist->id])}}" class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="col-4">
-                    <h3 class="font-weight-bold text-primary ml-2">
-                        {{ $playlist->name }}</em>
-                    </h3>
-                </div>
-                <div class="col-2">
-                    {{ $playlist->screenW }} x {{ $playlist->screenH }}
-                </div>
-                <div class="col-3">
-                    @if($playlist->zonaGuardias!=0)
-                        <span class="badge badge-success">Guardias</span>
-                    @endif
-                    @if(!!$playlist->musicURL)
-                        <span class="badge badge-info">Música</span>
-                    @endif
-                </div>
-                <div>
-                    <span class="badge badge-dark badge-pill">{{ $playlist->nActive }} / {{ $playlist->nNoActive }}</span>
-                    <span class="badge badge-light">{{ $playlist->updated_at }}</span>
-                </div>
-            </a>
-        @empty
-            <div class="list-group-item">{{ __('No devices') }}</div>
-        @endforelse
+    <div class="card-body">
+        <div class="list-group">
+            @forelse ($playlists as $playlist)
+                <a class="list-group-item list-group-item-action" href="{{route('playlist.single', ['id' => $playlist->id])}}">
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col-5">
+                            <h3 class="font-weight-bold text-primary">{{ $playlist->name }}</h3>
+                        </div>
+                        <div class="col-2">
+                            {{ $playlist->screenW }} x {{ $playlist->screenH }}
+                        </div>
+                        <div class="col-3">
+                            @if($playlist->zonaGuardias!=0)
+                                <span class="badge badge-success">Guardias</span>
+                            @endif
+                            @if(!!$playlist->musicURL)
+                                <span class="badge badge-info">Música</span>
+                            @endif
+                        </div>
+                        <div class="col-2">
+                            <span class="badge badge-dark badge-pill">{{ $playlist->nActive }} / {{ $playlist->nNoActive }}</span>
+                            <span class="badge badge-light">{{ $playlist->updated_at }}</span>
+                        </div>
+                    </div>
+                </a>
+            @empty
+                <p class="list-group-item">{{ __('No devices') }}</p>
+            @endforelse
+        </div>
     </div>
 </div>
 
