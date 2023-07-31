@@ -13,17 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // La creación de datos de roles debe ejecutarse primero
-        $this->call(RoleTableSeeder::class);
-        // Los usuarios necesitarán los roles previamente generados
-        $this->call(UserTableSeeder::class);
-        // La creación de datos de playlist
-        $this->call(PlaylistTableSeeder::class);
-        // La creación de datos de playlist
-        $this->call(UploadTableSeeder::class);
-        // La creación de datos de usuario
-        $this->call(UserinfoTableSeeder::class);
-
-
-    }
+        
+      }
 }
