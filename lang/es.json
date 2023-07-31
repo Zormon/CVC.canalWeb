@@ -77,5 +77,6 @@
     "Encoding": "Codificando",
     "Waiting": "En cola",
     "Profile": "Perfil",
-    "Media": "Contenidos"
+    "Media": "Contenidos",
+    "View deploy JSON": "Ver JSON de entrega"
 }

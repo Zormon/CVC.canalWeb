@@ -34,7 +34,7 @@
                 <a class="list-group-item list-group-item-action" href="{{route('playlist.single', $playlist->id)}}">
                     <div class="row d-flex justify-content-between align-items-center">
                         <div class="col-5">
-                            <h3 class="font-weight-bold text-primary">{{ $playlist->name }}</h3>
+                            <h3 class="font-weight-bold text-primary">@if ($isAdmin)<span class="badge badge-info">{{ $playlist->id }}</span>@endif {{ $playlist->name }}</h3>
                         </div>
                         <div class="col-2">
                             {{ $playlist->screenW }} x {{ $playlist->screenH }}

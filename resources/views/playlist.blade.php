@@ -21,18 +21,21 @@
 
     <div class="card-header">
         <div class="row">
-            <div class="col-9">
+            @if ($isAdmin)<div class="col-8">@else<div class="col-12">@endif
                 <h1>{{ $playlist->name }} <small>({{$playlist->screenW}} x {{$playlist->screenH}}@if($playlist->zonaGuardias!=0) | guardias @endif @if(!!$playlist->musicURL)| musica @endif)</small></h1>
             </div>
             <div class="col-1">
-                <button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#uploadMediaModal" title="{{ __('Upload') }}"><i class="ni ni-cloud-upload-96"></i></button>
+                <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#uploadMediaModal" title="{{ __('Upload') }}"><i class="ni ni-cloud-upload-96"></i></button>
             </div>
             @if ($isAdmin)
-            <div class="col-1">
-                <button type="button" class="btn btn-block btn-success" data-toggle="modal" data-target="#playlistDataModal" title="{{ __('Edit Playlist') }}"><i class="fa fa-edit"></i></button>
+            <div class="col-1 border-left">
+                <a class="btn btn-block btn-info" title="{{ __('View deploy JSON') }}" href="/deploy/{{ $playlist->id }}" target="_blank"><i class="fa fa-code"></i></a>
             </div>
             <div class="col-1">
-                <button type="button" class="btn btn-block btn-warning" data-toggle="modal" data-target="#deletePlaylistModal" title="{{ __('Delete Playlist') }}"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-block btn-success" data-toggle="modal" data-target="#playlistDataModal" title="{{ __('Edit Playlist') }}"><i class="fa fa-edit"></i></button>
+            </div>
+            <div class="col-1">
+                <button class="btn btn-block btn-warning" data-toggle="modal" data-target="#deletePlaylistModal" title="{{ __('Delete Playlist') }}"><i class="fa fa-trash"></i></button>
             </div>
             @endif
         </div>
@@ -116,7 +119,7 @@
                                 </div>
                                 <div class="col-2">
                                     <label for="">Eliminar</label>
-                                    <button type="button" class="btn btn-block btn-warning" data-toggle="modal" data-target="#deleteMediaModal" title="{{ __('Delete') }}"><i class="fas fa-trash"></i></button>
+                                    <button class="btn btn-block btn-warning" data-toggle="modal" data-target="#deleteMediaModal" title="{{ __('Delete') }}"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
                         </div>
