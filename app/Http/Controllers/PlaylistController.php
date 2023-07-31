@@ -120,17 +120,9 @@ class PlaylistController extends Controller {
         $user->authorizeRoles(['admin']);
 
         $data = $request->json()->all();
+        Playlist::create($data);
 
-        $pl = new Playlist;
-        $pl->userId = (Int)$data['userId'];
-        $pl->name = $data['name'];
-        $pl->musicURL = $data['musicURL'];
-        $pl->screenW = $data['screenW'];
-        $pl->screenH = $data['screenH'];
-        $pl->zonaGuardias = $data['zonaGuardias'];
-        $pl->save();
-
-        return response()->json(['playlist' => $pl], Response::HTTP_OK);
+        return response(null, Response::HTTP_OK);
     }
 
 }
