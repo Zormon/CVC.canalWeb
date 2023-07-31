@@ -76,13 +76,17 @@ class UserController extends Controller  {
     public function new (Request $request) {
         $user = Auth::user();
         $user->authorizeAdmin();
-
+        
         $data = $request->json()->all();
+
+        $n = User::where('username', $data['username'])->count();
+        if ($n>0) { return response(null, Response::HTTP_CONFLICT); }
+
         User::create($data);
 
         return response(null, Response::HTTP_OK);
     }
-    
+
     // ======== API > ========
 
 }

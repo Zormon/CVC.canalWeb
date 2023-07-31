@@ -36,9 +36,9 @@ Route::get('/EncodeQueue', [MediaController::class, 'RunEncodingQueue'])->name('
 
 // Users
 Route::get('/users', [UserController::class, 'showList'])->name('users');
-Route::get('/user/{uId}', [UserController::class, 'showEdit'])->name('profile');
+Route::post('/users', [UserController::class, 'new']);
 
-Route::post('/user', [UserController::class, 'new']);
+Route::get('/user/{uId}', [UserController::class, 'showEdit'])->name('profile');
 Route::patch('/user/{uId}', [UserController::class, 'update'])->name('profile.update');
 Route::delete('/user/{uId}', [UserController::class, 'delete'])->name('profile.delete'); //TODO: Implementar
 
