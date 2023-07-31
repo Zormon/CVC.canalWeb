@@ -18,7 +18,7 @@ class DeployController extends Controller {
     // ================== < DEVICE INFO ==================
         
         $resp['info']['id'] = $id;
-        $resp['info']['storage']['media'] = env('APP_URL').'storage/';
+        $resp['info']['storage']['media'] = env('APP_URL').'storage/media/';
         $resp['info']['storage']['music'] = $musicJSON;
         $resp['info']['device']['name'] = $playlist->name;
         $resp['info']['device']['type'] = '#';
