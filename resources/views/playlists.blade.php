@@ -54,7 +54,9 @@
                     </div>
                 </a>
             @empty
-                <p class="list-group-item">{{ __('No devices') }}</p>
+                <div class="alert alert-warning">
+                    {{ __('No devices') }}
+                </div>
             @endforelse
         </div>
     </div>

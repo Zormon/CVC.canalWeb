@@ -78,5 +78,6 @@
     "Waiting": "En cola",
     "Profile": "Perfil",
     "Media": "Contenidos",
-    "View deploy JSON": "Ver JSON de entrega"
+    "View deploy JSON": "Ver JSON de entrega",
+    "No media found": "No hay contenidos"
 }
