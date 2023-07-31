@@ -2,7 +2,20 @@
 
 @section('content')
 
-<div class="card-header"><h1>{{ __("Userlist") }}</h1></div>
+@include('modals.userData', [
+    'modalAction' => __('Add')
+])
+
+<div class="card-header">
+        <div class="row">
+            <div class="col-10">
+                <h1>{{ __('Userlist') }}</h1>
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#userDataModal"><i class="fas fa-plus"></i>&nbsp;&nbsp;{{ __('New user') }}</button>
+            </div>
+        </div>
+    </div>
 
 <div class="card-body">
     <ul class="list-group">

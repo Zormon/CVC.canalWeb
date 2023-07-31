@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Upload;
-use App\Playlist;
-use App\EncodeQueue;
+use App\Models\Upload;
+use App\Models\Playlist;
+use App\Models\EncodeQueue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,32 +14,83 @@ use Intervention\Image\Facades\Image;
 
 class MediaController extends Controller {
 
-    public function delete (string $id) {
-        $user = Auth::user();
-        $user->authorizeRoles(['user', 'admin']);
+    public function RunEncodingQueue(Request $request) {
+        // Prevent multiple instances of this script from running
+        $lock_file = fopen('/tmp/encoding_queue', 'c');
+        $got_lock = flock($lock_file, LOCK_EX | LOCK_NB, $wouldblock);
+        if ($lock_file === false || (!$got_lock && !$wouldblock))   { throw new Exception('ERROR: Unable to create or lock lock file.'); }
+        else if (!$got_lock && $wouldblock)                         { return response(null, Response::HTTP_SERVICE_UNAVAILABLE);}
+        ftruncate($lock_file, 0); fwrite($lock_file, getmypid() . "\n");
+        // End of lock
 
-        $media = Upload::where('id', $id)->first();
-        if (empty($media))      { return response(null, Response::HTTP_NOT_FOUND); }
 
-        if (!$user->hasRole('admin')) { // Si no es admin, comprobar que el usuario es el dueño de la lista
-            $pl = Playlist::where('id', $media->playlistId)->where('userId',$user->id)->first();
-            if (empty($pl))         { return response(null, Response::HTTP_FORBIDDEN); }
+        $queue = EncodeQueue::where('encoding', 0)->get();
+
+        $output["Encoded"] = [];
+        foreach ($queue as $q) {
+            $basename = pathinfo($q->filename, PATHINFO_FILENAME);
+            $queuedFile = PATH_QUEUE . $q->filename;
+
+            $data = json_decode($q->data);
+
+            if ( !file_exists( PATH_MEDIA.'.mp4' ) ) {
+                $pl = Playlist::where('id', $q->playlistId)->first();
+                $duration = shell_exec(PATH_BIN . 'ffprobe -show_streams ' . $queuedFile . ' 2> /dev/null | grep duration= | cut -d"=" -f2');
+                $duration = ceil((float)$duration);
+
+                // Begin encoding ====================================
+                EncodeQueue::where('id', $q->id)->update(['encoding' => 1]);
+
+                exec(PATH_BIN . 'ffmpeg ' .
+                    ' -i ' . $queuedFile .
+                    ' -vf scale=' . $pl->screenW . ':' . $pl->screenH . ',setsar=1,setdar=w/h' .
+                    ' -c:v libx264 -crf 23' .
+                    ' -pix_fmt yuv420p  ' .
+                    PATH_MEDIA . $basename . '.mp4'
+                );
+
+                exec(PATH_BIN . 'ffmpeg ' .
+                    ' -i ' . $queuedFile .
+                    ' -ss 00:00:2.435 -vframes 1 -vf "scale=250:-1,crop=\'min(200,iw)\':\'min(150,ih)\'" ' .
+                    PATH_THUMBS . $basename . '.webp'
+                );
+                
+                unlink( $queuedFile );
+
+                EncodeQueue::where('id', $q->id)->delete();
+                // End encoding ======================================
+
+                $upload = new Upload();
+                $upload->filename = $basename . '.mp4';
+                $upload->userId = $q->userId;
+                $upload->playlistId = $q->playlistId;
+
+                $upload->title = $data->title;
+                $upload->original_name = $data->original_name;
+                $upload->transition = $data->transition;
+                $upload->dateFrom = $data->dateFrom;
+                $upload->dateTo = $data->dateTo;
+                $upload->timeFrom = $data->timeFrom;
+                $upload->timeTo = $data->timeTo;
+                $upload->volume = $data->volume;
+                $upload->duration = $duration;
+                $upload->active = 1;
+                $upload->save();
+
+            }
+            array_push($output["Encoded"], ["file" => $q->filename, "data" => $data]);
         }
 
-
-        define('FILE', PATH_MEDIA . $media->filename);
-        if (file_exists(FILE))  { unlink(FILE); }
-
-        define('THUMB', PATH_THUMBS . pathinfo($media->filename, PATHINFO_FILENAME) . '.webp');
-        if (file_exists(THUMB)) { unlink(THUMB); }
-
-        Upload::where('id', $id)->delete();
-        
-        return response()->json(['filename' => $media->filename], Response::HTTP_OK);
+        ftruncate($lock_file, 0); flock($lock_file, LOCK_UN);
+        return response()->json($output);
     }
 
+
+    // ======== < API ========
+
     public function update(Request $request, string $id) {
-        $request->user()->authorizeRoles(['user','admin']);
+        $user = Auth::user();
+        $user->authorizeLogin();
         $data = $request->json()->all();
 
         Upload::where('id', $id)->update($data);
@@ -47,11 +98,11 @@ class MediaController extends Controller {
         return response(null, Response::HTTP_OK);
     }
 
-    public function upload(Request $request) {
+    public function new(Request $request) {
         $user = Auth::user();
-        $user->authorizeRoles(['user','admin']);
+        $user->authorizeLogin();
 
-        if (!$user->hasRole('admin')) {
+        if (!$user->isAdmin()) {
             $pl = Playlist::where('id', $request->plId)->where('userId',$user->id)->first();
             if (empty($pl))         { return response(null, Response::HTTP_FORBIDDEN); }
         }
@@ -71,7 +122,7 @@ class MediaController extends Controller {
                 case 'video':
                     $newFilename = $name . '.' . $file->getClientOriginalExtension();
 
-                    if ($user->hasRole('admin') && !!$request->noCod) { // Si es admin, no codifica
+                    if ($user->isAdmin() && !!$request->noCod) { // Si es admin, no codifica
                         $duration = 10; // TODO: Extraer duracion
 
                         $file->move(PATH_MEDIA, $newFilename);
@@ -152,74 +203,31 @@ class MediaController extends Controller {
         return response(null, Response::HTTP_OK);
     }
 
-    public function RunEncodingQueue(Request $request) {
-        // Prevent multiple instances of this script from running
-        $lock_file = fopen('/tmp/encoding_queue', 'c');
-        $got_lock = flock($lock_file, LOCK_EX | LOCK_NB, $wouldblock);
-        if ($lock_file === false || (!$got_lock && !$wouldblock))   { throw new Exception('ERROR: Unable to create or lock lock file.'); }
-        else if (!$got_lock && $wouldblock)                         { return response(null, Response::HTTP_SERVICE_UNAVAILABLE);}
-        ftruncate($lock_file, 0); fwrite($lock_file, getmypid() . "\n");
-        // End of lock
+    public function delete (string $id) {
+        $user = Auth::user();
+        $user->authorizeLogin();
 
+        $media = Upload::where('id', $id)->first();
+        if (empty($media))      { return response(null, Response::HTTP_NOT_FOUND); }
 
-        $queue = EncodeQueue::where('encoding', 0)->get();
-
-        $output["Encoded"] = [];
-        foreach ($queue as $q) {
-            $basename = pathinfo($q->filename, PATHINFO_FILENAME);
-            $queuedFile = PATH_QUEUE . $q->filename;
-
-            $data = json_decode($q->data);
-
-            if ( !file_exists( PATH_MEDIA.'.mp4' ) ) {
-                $pl = Playlist::where('id', $q->playlistId)->first();
-                $duration = shell_exec(PATH_BIN . 'ffprobe -show_streams ' . $queuedFile . ' 2> /dev/null | grep duration= | cut -d"=" -f2');
-                $duration = ceil((float)$duration);
-
-                // Begin encoding ====================================
-                EncodeQueue::where('id', $q->id)->update(['encoding' => 1]);
-
-                exec(PATH_BIN . 'ffmpeg ' .
-                    ' -i ' . $queuedFile .
-                    ' -vf scale=' . $pl->screenW . ':' . $pl->screenH . ',setsar=1,setdar=w/h' .
-                    ' -c:v libx264 -crf 23' .
-                    ' -pix_fmt yuv420p  ' .
-                    PATH_MEDIA . $basename . '.mp4'
-                );
-
-                exec(PATH_BIN . 'ffmpeg ' .
-                    ' -i ' . $queuedFile .
-                    ' -ss 00:00:2.435 -vframes 1 -vf "scale=250:-1,crop=\'min(200,iw)\':\'min(150,ih)\'" ' .
-                    PATH_THUMBS . $basename . '.webp'
-                );
-                
-                unlink( $queuedFile );
-
-                EncodeQueue::where('id', $q->id)->delete();
-                // End encoding ======================================
-
-                $upload = new Upload();
-                $upload->filename = $basename . '.mp4';
-                $upload->userId = $q->userId;
-                $upload->playlistId = $q->playlistId;
-
-                $upload->title = $data->title;
-                $upload->original_name = $data->original_name;
-                $upload->transition = $data->transition;
-                $upload->dateFrom = $data->dateFrom;
-                $upload->dateTo = $data->dateTo;
-                $upload->timeFrom = $data->timeFrom;
-                $upload->timeTo = $data->timeTo;
-                $upload->volume = $data->volume;
-                $upload->duration = $duration;
-                $upload->active = 1;
-                $upload->save();
-
-            }
-            array_push($output["Encoded"], ["file" => $q->filename, "data" => $data]);
+        if (!$user->isAdmin()) { // Si no es admin, comprobar que el usuario es el dueño de la lista
+            $pl = Playlist::where('id', $media->playlistId)->where('userId',$user->id)->first();
+            if (empty($pl))         { return response(null, Response::HTTP_FORBIDDEN); }
         }
 
-        ftruncate($lock_file, 0); flock($lock_file, LOCK_UN);
-        return response()->json($output);
+
+        define('FILE', PATH_MEDIA . $media->filename);
+        if (file_exists(FILE))  { unlink(FILE); }
+
+        define('THUMB', PATH_THUMBS . pathinfo($media->filename, PATHINFO_FILENAME) . '.webp');
+        if (file_exists(THUMB)) { unlink(THUMB); }
+
+        Upload::where('id', $id)->delete();
+        
+        return response()->json(['filename' => $media->filename], Response::HTTP_OK);
     }
+    
+    // ========  API > ========
+
+
 }

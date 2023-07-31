@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\User;
-use App\Playlist;
+use App\Models\User;
+use App\Models\Playlist;
 use Illuminate\Support\Facades\Storage;
 
 class DeployController extends Controller {

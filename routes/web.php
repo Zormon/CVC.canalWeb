@@ -21,14 +21,14 @@ Route::get('/issues', [HomeController::class, 'issues'])->name('issues');
 Route::get('/playlists/{uId?}', [PlaylistController::class, 'userPlaylists'])->name('playlists.user');
 Route::get('/playlist/{plId}', [PlaylistController::class, 'showList'])->name('playlist.single');
 Route::post('/playlist', [PlaylistController::class, 'new'])->name('playlist');
-Route::put('/playlist/{plId}', [PlaylistController::class, 'edit']);
+Route::put('/playlist/{plId}', [PlaylistController::class, 'update']);
 Route::patch('/playlist/{plId}', [PlaylistController::class, 'updatePositions']);
 Route::delete('/playlist/{plId}', [PlaylistController::class, 'delete']); //TODO: Implementar
 
 
 // Media
 Route::patch('/media/{id}',[MediaController::class, 'update'])->name('media.single');
-Route::post('/media',[MediaController::class, 'upload'])->name('media');
+Route::post('/media',[MediaController::class, 'new'])->name('media');
 Route::delete('/media/{id}',[MediaController::class, 'delete']);
 // Procesar colas
 Route::get('/EncodeQueue', [MediaController::class, 'RunEncodingQueue'])->name('EncodeQueue');
@@ -36,7 +36,9 @@ Route::get('/EncodeQueue', [MediaController::class, 'RunEncodingQueue'])->name('
 
 // Users
 Route::get('/users', [UserController::class, 'showList'])->name('users');
-Route::get('/user/{uId}', [UserController::class, 'edit'])->name('profile');
+Route::get('/user/{uId}', [UserController::class, 'showEdit'])->name('profile');
+
+Route::post('/user', [UserController::class, 'new']);
 Route::patch('/user/{uId}', [UserController::class, 'update'])->name('profile.update');
 Route::delete('/user/{uId}', [UserController::class, 'delete'])->name('profile.delete'); //TODO: Implementar
 

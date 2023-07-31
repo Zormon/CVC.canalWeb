@@ -10,7 +10,7 @@
         'screenW' => 1280,
         'screenH' => 720,
         'zonaGuardias' => 0
-        ])
+    ])
 @endif
 
 

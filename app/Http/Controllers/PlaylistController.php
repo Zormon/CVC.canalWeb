@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Upload;
-use App\Playlist;
-use App\EncodeQueue;
-use App\User;
+use App\Models\Upload;
+use App\Models\Playlist;
+use App\Models\EncodeQueue;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Auth;
 class PlaylistController extends Controller {
 
     public function userPlaylists(Request $request, string $uId=null) {
-        $user = $request->user();
-        $user->authorizeRoles(['user','admin']);
+        $user = Auth::user();
+        $user->authorizeLogin();
 
-        if (!$user->hasRole('admin') && $uId != null) {
-            return response(null, Response::HTTP_FORBIDDEN);
+        if (!$user->isAdmin() && $uId != null) {
+            abort(401);
         }
 
         $uId ??= $user->id;
@@ -42,8 +42,8 @@ class PlaylistController extends Controller {
     }
 
     public function showList(Request $request, string $plId) {
-        $user = $request->user();
-        $user->authorizeRoles(['user','admin']);
+        $user = Auth::user();
+        $user->authorizeLogin();
 
         $playlist = Playlist::where('id', $plId)->first();
         if (empty($playlist))   { abort(404); }
@@ -54,9 +54,12 @@ class PlaylistController extends Controller {
         return view('playlist', ["queue" => $queue, 'media' => $media, 'playlist' => $playlist, 'uId' => $user->id]);
     }
 
-    public function edit(Request $request, string $plId) {
-        $user = $request->user();
-        $user->authorizeRoles(['admin']);
+
+    // ======== < API ========
+
+    public function update(Request $request, string $plId) {
+        $user = Auth::user();
+        $user->authorizeAdmin();
 
         $data = $request->json()->all();
         Playlist::where('id', $plId)->update($data);
@@ -66,9 +69,8 @@ class PlaylistController extends Controller {
     }
 
     public function updatePositions(Request $request, string $plId) {
-        $user = $request->user();
-        $user->authorizeRoles(['user','admin']);
-
+        $user = Auth::user();
+        $user->authorizeLogin();
         $data = $request->json()->all();
 
         foreach($data['positions'] as $k => $v) {
@@ -76,12 +78,21 @@ class PlaylistController extends Controller {
         }
 
         return response(null, Response::HTTP_OK);
+    }
 
+    public function new (Request $request) {
+        $user = Auth::user();
+        $user->authorizeAdmin();
+
+        $data = $request->json()->all();
+        Playlist::create($data);
+
+        return response(null, Response::HTTP_OK);
     }
 
     public function delete (Request $request, string $id) {
-        $user = $request->user();
-        $user->authorizeRoles(['admin']);
+        $user = Auth::user();
+        $user->authorizeAdmin();
 
         $pl = Playlist::where('id', $id)->first();
         if (empty($pl))         { return response(null, Response::HTTP_NOT_FOUND); }
@@ -114,15 +125,7 @@ class PlaylistController extends Controller {
         
         return response()->json(['playlist' => $pl->name, 'media' => $media], Response::HTTP_OK);
     }
-
-    public function new (Request $request) {
-        $user = $request->user();
-        $user->authorizeRoles(['admin']);
-
-        $data = $request->json()->all();
-        Playlist::create($data);
-
-        return response(null, Response::HTTP_OK);
-    }
+    
+    // ========  API > ========
 
 }

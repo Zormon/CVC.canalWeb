@@ -1,6 +1,6 @@
 {
     "Login": "Acceder",
-    "Username": "Usuario",
+    "User": "Usuario",
     "Password": "Contraseña",
     "Remember Me": "Recordarme",
     "Name":"Nombre",
@@ -11,6 +11,7 @@
     "Playlist": "Lista",
     "Contact support": "Contactar con soporte",
     "Dashboard": "Vista general",
+    "New user": "Nuevo usuario",
     "New playlist": "Nueva lista",
     "Add new playlist": "Añadir nueva lista",
     "Edit playlist": "Editar lista",

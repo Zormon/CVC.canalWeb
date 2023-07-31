@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
@@ -11,17 +11,17 @@ class UserController extends Controller  {
     
     public function showList() {
         $user = Auth::user();
-        $user->authorizeRoles(['admin']);
+        $user->authorizeAdmin();
 
         $users = User::get();
         return view('users', ["users" => $users]);
     }
 
-    public function edit(string $uId) {
+    public function showEdit(string $uId) {
         $user = Auth::user();
-        $user->authorizeRoles(['user','admin']);
+        $user->authorizeLogin();
 
-        if (!$user->hasRole('admin') && $uId != $user->id) {
+        if (!$user->isAdmin() && $uId != $user->id) {
             return response(null, Response::HTTP_FORBIDDEN);
         }
 
@@ -32,14 +32,17 @@ class UserController extends Controller  {
         return view('user', ["userData" => $userData]);
     }
 
+    
+    // ======== < API ========
+
     public function update(Request $request, string $uId) {
         $user = Auth::user();
-        $user->authorizeRoles(['user','admin']);
+        $user->authorizeLogin();
 
         $data = $request->json()->all();
 
         // Si no es admin, comprobar si intenta editar otro usuario o quiere cambiar parametros que no puede
-        if (!$user->hasRole('admin') ) {
+        if (!$user->isAdmin() ) {
             if (
                 $uId != $user->id
                 || array_key_exists('username', $data)
@@ -69,5 +72,17 @@ class UserController extends Controller  {
 
         return response(null, Response::HTTP_OK);
     }
+
+    public function new (Request $request) {
+        $user = Auth::user();
+        $user->authorizeAdmin();
+
+        $data = $request->json()->all();
+        User::create($data);
+
+        return response(null, Response::HTTP_OK);
+    }
+    
+    // ======== API > ========
 
 }

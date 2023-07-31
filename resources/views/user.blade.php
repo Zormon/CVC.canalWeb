@@ -8,9 +8,9 @@
         <form id="userdataForm">
             @if ($isAdmin)
             <div class="form-group row">
-                <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('Username') }}</label>
+                <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('User') }}</label>
                 <div class="col-md-6">
-                    <input class="form-control" type="username" name="username" placeholder="{{ __('Username') }}" value="{{ $userData->username }}" required>
+                    <input class="form-control" type="username" name="username" placeholder="{{ __('User') }}" value="{{ $userData->username }}" required>
                 </div>
             </div>
             @endif
