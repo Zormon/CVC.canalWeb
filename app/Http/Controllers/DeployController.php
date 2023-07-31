@@ -3,66 +3,39 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Playlist;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Upload;
 
 class DeployController extends Controller {
+    public function __invoke($id) {
+        date_default_timezone_set("Atlantic/Canary");
 
-    private $remoteMusicJson = false;
-    private $remoteGuardiasJson = false;
-    private $id = '';
+        $playlist = Playlist::where('id', $id)->first();
+        $user = User::where('id', $playlist->userId)->first();
+        $videos = Upload::where('playlistId', $id)->where('active', 1)->orderBy('position','ASC')->get();
+        $musicJSON = !!$playlist->musicURL ? @json_decode(file_get_contents($playlist->musicURL)) : null;
+        $resp = Array();
 
-    private function devInfo() {
-        $info['id'] = $this->id;
-        $info['storage']['media'] = env('APP_URL').'storage/';
-        $info['storage']['music'] = $this->remoteMusicJson? $this->remoteMusicJson->info->storage->music : null;
-        $info['device']['name'] = '#';
-        $info['device']['type'] = '#';
-        $info['device']['shop'] = '#';
-        $info['version'] = time();
+    // ================== < DEVICE INFO ==================
+        
+        $resp['info']['id'] = $id;
+        $resp['info']['storage']['media'] = env('APP_URL').'storage/';
+        $resp['info']['storage']['music'] = $musicJSON;
+        $resp['info']['device']['name'] = $playlist->name;
+        $resp['info']['device']['type'] = '#';
+        $resp['info']['device']['shop'] = $user->name;
+        $resp['info']['version'] = time();
+        
+    // ================== DEVICE INFO > ==================
+        
 
-        return $info;
-    }
+    // ================== < MEDIA ==================
 
-    private function devPower() {
-        $playlist = Playlist::where('id',$this->id)->first();
-        $user = User::where('id', $playlist->userId)->first();	 
-	 
-		$power = json_decode( $user->power );
-
-        $resp['mode'] = 'mem';
-		$resp['exclude'] = [0]; // Excluir dias - TEMPORAL
-
-		// ------- Encendido ------
-		$resp['on'][0] = $power[0]->ON??null; // Lunes
-		$resp['on'][1] = $power[1]->ON??null; // Martes
-		$resp['on'][2] = $power[2]->ON??null; // Miercoles
-		$resp['on'][3] = $power[3]->ON??null; // Jueves
-		$resp['on'][4] = $power[4]->ON??null; // Viernes
-		$resp['on'][5] = $power[5]->ON??null; // Sabado
-		$resp['on'][6] = $power[6]->ON??null; // Domingo
-		
-		
-		// ------- Apagado ------
-		$resp['off'][0] = $power[0]->OFF??null; // Lunes
-		$resp['off'][1] = $power[1]->OFF??null; // Martes
-		$resp['off'][2] = $power[2]->OFF??null; // Miercoles
-		$resp['off'][3] = $power[3]->OFF??null; // Jueves
-		$resp['off'][4] = $power[4]->OFF??null; // Viernes
-		$resp['off'][5] = $power[5]->OFF??null; // Sabado
-		$resp['off'][6] = $power[6]->OFF??null; // Domingo
-		
-        return $resp;
-    }
-
-    private function devMedia() {
-        $playlist = Playlist::where('id', $this->id)->first();
-        $videos = Upload::where('playlistId', $this->id)->whereRaw('active=1')->orderBy('position','ASC')->get();
-        $currentContenidos = array();
+        $contenidos = array();
 
         foreach($videos as $vid){
             $now = date("Y-m-d H:i:s",time());
 
-            $currentContenidos[] = array(
+            $contenidos[] = array(
                 'duration' => $vid->duration,
                 'volume' => $vid->volume,
                 'id' => $vid->id,
@@ -80,17 +53,18 @@ class DeployController extends Controller {
         $list = Array();
         $catalog = Array();
 
-        foreach ($currentContenidos as $contenido) {
-            $cont['file'] = $contenido['archivo'];
-			$cont['playlist'] = $contenido['lista'];
-            $cont['name'] = $contenido['nombre'];
-            $cont['dateFrom'] = $contenido['desde'];
-            $cont['dateTo'] = $contenido['hasta'];
-            $cont['timeFrom'] = $contenido['horaDesde'];
-            $cont['timeTo'] = $contenido['horaHasta'];
-            $cont['duration'] = $contenido['duration'];
-            $cont['volume'] = $contenido['volume'];  
-			$cont['transition'] = $contenido['transition'];  
+        foreach ($contenidos as $contenido) {
+            $cont = Array();
+            $cont['file']           = $contenido['archivo'];
+			$cont['playlist']       = $contenido['lista'];
+            $cont['name']           = $contenido['nombre'];
+            $cont['dateFrom']       = $contenido['desde'];
+            $cont['dateTo']         = $contenido['hasta'];
+            $cont['timeFrom']       = $contenido['horaDesde'];
+            $cont['timeTo']         = $contenido['horaHasta'];
+            $cont['duration']       = $contenido['duration'];
+            $cont['volume']         = $contenido['volume'];  
+			$cont['transition']     = $contenido['transition'];  
 
             if (empty($cont['dateFrom']))   { unset($cont['dateFrom']); }
             if (empty($cont['dateTo']))     { unset($cont['dateTo']); }
@@ -101,56 +75,65 @@ class DeployController extends Controller {
             $catalog[$contenido['id']] = $cont;
         }
 
-        return array('list'=>$list, 'catalog'=> $catalog);
-    }
+        $resp['media'] = $list;
+        $resp['catalog']['media'] = $catalog;
 
-    private function devMusic() {
-        if (!!!$this->remoteMusicJson) { return null; }
+    // ================== MEDIA > ==================
+        
 
-        $return = $this->remoteMusicJson->music;
-        return $return;
-    }
+    // ================== < MUSIC ==================
 
-    private function devMusicCatalog() {
-        if (!!!$this->remoteMusicJson) { return null; }
+        $resp['music'] = $musicJSON->music??[];
+        $resp['catalog']['music'] = $musicJSON->catalog->music??[];
 
-        $return = $this->remoteMusicJson->catalog->music;
-        return $return;
-    }
+    // ================== MUSIC > ==================
+    
+    // ================== < EVENTS ==================
 
-    private function devGuardias() {
-        if (!!!$this->remoteGuardiasJson) { return null; }
+        $resp['events'] = [];
 
-        $return = $this->remoteGuardiasJson->guardias;
-        return $return;
-    }
+    // ================== EVENTS > ==================
+    
+    // ================== < POWER ==================
 
-    public function json($id) {
-        date_default_timezone_set("Atlantic/Canary");
+        $power = json_decode( $user->power );
 
-        $this->id = $id;
-        $playlist = Playlist::where('id', $id)->first();
-        if (!!$playlist->musicURL) {
-            $this->remoteMusicJson = @json_decode(file_get_contents($playlist->musicURL));
-        }
+        $resp['power']['mode'] = 'mem';
+		$resp['power']['exclude'] = [0]; // Excluir dias - TEMPORAL
 
-        $dMedia = $this->devMedia();
+		// ------- Encendido ------
+		$resp['power']['on'][0] = $power[0]->ON??null; // Lunes
+		$resp['power']['on'][1] = $power[1]->ON??null; // Martes
+		$resp['power']['on'][2] = $power[2]->ON??null; // Miercoles
+		$resp['power']['on'][3] = $power[3]->ON??null; // Jueves
+		$resp['power']['on'][4] = $power[4]->ON??null; // Viernes
+		$resp['power']['on'][5] = $power[5]->ON??null; // Sabado
+		$resp['power']['on'][6] = $power[6]->ON??null; // Domingo
+		
+		
+		// ------- Apagado ------
+		$resp['power']['off'][0] = $power[0]->OFF??null; // Lunes
+		$resp['power']['off'][1] = $power[1]->OFF??null; // Martes
+		$resp['power']['off'][2] = $power[2]->OFF??null; // Miercoles
+		$resp['power']['off'][3] = $power[3]->OFF??null; // Jueves
+		$resp['power']['off'][4] = $power[4]->OFF??null; // Viernes
+		$resp['power']['off'][5] = $power[5]->OFF??null; // Sabado
+		$resp['power']['off'][6] = $power[6]->OFF??null; // Domingo
 
-        $json['info'] = $this->devInfo();
-        $json['media'] = $dMedia['list'];
-        $json['music'] = $this->devMusic();
-        $json['events'] = [];
-        $json['catalog']['media'] = $dMedia['catalog'];
-        $json['catalog']['music'] = $this->devMusicCatalog();
-        $json['power'] = $this->devPower();
+    // ================== POWER > ==================
+    
+    
+    // ================== < GUARDIAS ==================
 
         if ($playlist->zonaGuardias != 0) {
-            $this->remoteGuardiasJson = @json_decode(file_get_contents('https://api.farmavisioncanarias.com/guardias/'.$playlist->zonaGuardias));
-            $json['guardias'] = $this->devGuardias();
+            $guardiasJson = @json_decode(file_get_contents('https://api.farmavisioncanarias.com/guardias/'.$playlist->zonaGuardias));
+            $resp['guardias'] = $guardiasJson->guardias;
         }
 
-        header("Content-type: application/json");
-        echo json_encode($json, JSON_PRETTY_PRINT);
-        die();
+    // ================== GUARDIAS > ==================
+
+
+
+        return response()->json($resp);
     }
 }

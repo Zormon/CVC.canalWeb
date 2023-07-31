@@ -9,7 +9,7 @@ Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 Route::get('/', [HomeController::class, 'root']);
 
 // Deploy
-Route::get('/deploy/{id}', [DeployController::class, 'json'])->name('json');
+Route::get('/deploy/{id}', DeployController::class)->name('json');
 
 
 // Home
