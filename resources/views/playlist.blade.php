@@ -61,11 +61,11 @@
     <div class="card-body">
         <div id="playlist" class="list-group list-group-sortable-connected">
         @forelse ($media as $video)
-            <div data-id="{{ $video->id }}" data-position="{{ $video->position }}" class="list-group-item list-group-item-action media-item">
+            <div data-id="{{ $video->id }}" data-position="{{ $video->position }}" class="list-group-item list-group-item-action media-item @if ($video->timedOut) list-group-item-warning @endif">
                 <div class="row">
                     <div class="col-md-2">
-                        <a href="{{ '/storage/media/'.$video->filename }}" style="max-height:250px;overflow:hidden;">
-                            <img src="{{ '/storage/thumbs/'.pathinfo($video->filename,PATHINFO_FILENAME).'.webp' }}" class="card-img-top img-fluid" alt="ID #{{ $video->id }}">
+                        <a href="{{ '/storage/media/'.$video->filename }}" class="thumb">
+                            <img src="{{ '/storage/thumbs/'.pathinfo($video->filename,PATHINFO_FILENAME).'.webp' }}" class="card-img-top img-fluid" alt="Error en miniatura">
                         </a>
                     </div>
                     

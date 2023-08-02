@@ -135,7 +135,7 @@ class MediaController extends Controller {
 
                         shell_exec(PATH_BIN . 'ffmpeg ' .
                             ' -i ' . PATH_MEDIA . $upload->filename .
-                            ' -ss 00:00:2.435 -vframes 1 -filter:v scale="250:-1" ' .
+                            ' -ss 00:00:2.435 -vframes 1 -vf "scale=250:-1,crop=\'min(200,iw)\':\'min(150,ih)\'" ' .
                             PATH_THUMBS . pathinfo($upload->filename, PATHINFO_FILENAME) . '.webp'
                         );
                     } else {
@@ -171,10 +171,7 @@ class MediaController extends Controller {
                     $saveName = $name . '.webp';
                     $resizeName = $name . '.webp';
 
-                    Image::make($file)
-                        ->resize(250, null, function ($constraints) {
-                            $constraints->aspectRatio();
-                        })->save(PATH_THUMBS . $resizeName, 60);
+                    Image::make($file)->fit(250,200)->save(PATH_THUMBS . $resizeName, 60);
 
                     $image = Image::make($file);
                     $image->resize($targetW, $targetH);
