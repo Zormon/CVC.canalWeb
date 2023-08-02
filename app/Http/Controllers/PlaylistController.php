@@ -51,6 +51,11 @@ class PlaylistController extends Controller {
         $media = Upload::where('playlistId', $plId)->orderBy('position','ASC')->get();
         $queue = EncodeQueue::where('playlistId', $plId)->orderBy('id','ASC')->get();
 
+        $today = date('Y-m-d');
+        foreach ($media as $v) {
+            $v->timedOut = !!$v->dateTo && $v->dateTo < $today;
+        }
+
         return view('playlist', ["queue" => $queue, 'media' => $media, 'playlist' => $playlist, 'uId' => $user->id]);
     }
 
