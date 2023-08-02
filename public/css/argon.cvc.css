@@ -371,7 +371,7 @@ html [type='button'],
 [type='reset'],
 [type='submit']
 {
-    -webkit-appearance: button;
+    appearance: button;
 }
 
 button::-moz-focus-inner,
@@ -396,7 +396,7 @@ input[type='time'],
 input[type='datetime-local'],
 input[type='month']
 {
-    -webkit-appearance: listbox;
+    appearance: listbox;
 }
 
 textarea
@@ -447,20 +447,20 @@ progress
 {
     outline-offset: -2px;
 
-    -webkit-appearance: none;
+    appearance: none;
 }
 
 [type='search']::-webkit-search-cancel-button,
 [type='search']::-webkit-search-decoration
 {
-    -webkit-appearance: none;
+    appearance: none;
 }
 
 ::-webkit-file-upload-button
 {
     font: inherit;
 
-    -webkit-appearance: button;
+    appearance: button;
 }
 
 output
@@ -4823,7 +4823,7 @@ input[type='button'].btn-block
     background-size: 8px 10px;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, .075);
 
-    -webkit-appearance: none;
+    appearance: none;
        -moz-appearance: none;
             appearance: none;
 }
@@ -4963,7 +4963,7 @@ input[type='button'].btn-block
 
     background-color: transparent;
 
-    -webkit-appearance: none;
+    appearance: none;
        -moz-appearance: none;
             appearance: none;
 }
@@ -5000,7 +5000,7 @@ input[type='button'].btn-block
     background-color: #95A438;
     box-shadow: 0 .1rem .25rem rgba(0, 0, 0, .1);
 
-    -webkit-appearance: none;
+    appearance: none;
             appearance: none;
 }
 @media screen and (prefers-reduced-motion: reduce)
@@ -7024,7 +7024,7 @@ button.close
     border: 0;
     background-color: transparent;
 
-    -webkit-appearance: none;
+    appearance: none;
 }
 
 .modal-open
@@ -16965,7 +16965,7 @@ a.btn-icon-only
     border-radius: .375rem;
     background-color: #f6f9fc;
 
-    -moz-appearance: none;
+    appearance: none;
 }
 .btn-icon-clipboard:hover
 {
@@ -18272,10 +18272,6 @@ textarea[resize='horizontal']
 {
     font-size: 4.25rem;
 }
-.icon-xl + .icon-text
-{
-    width: calc(100% - $icon-size-xl - 1);
-}
 
 .icon-lg
 {
@@ -18287,10 +18283,6 @@ textarea[resize='horizontal']
 {
     font-size: 3.25rem;
 }
-.icon-lg + .icon-text
-{
-    width: calc(100% - $icon-size-lg - 1);
-}
 
 .icon-sm
 {
@@ -18301,10 +18293,6 @@ textarea[resize='horizontal']
 .icon-sm svg
 {
     font-size: 1.25rem;
-}
-.icon-sm + .icon-text
-{
-    width: calc(100% - $icon-size-sm - 1);
 }
 
 .icon-shape
