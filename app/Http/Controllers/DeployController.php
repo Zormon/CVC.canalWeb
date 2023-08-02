@@ -101,24 +101,32 @@ class DeployController extends Controller {
         $resp['power']['mode'] = 'mem';
 		$resp['power']['exclude'] = [0]; // Excluir dias - TEMPORAL
 
-		// ------- Encendido ------
-		$resp['power']['on'][0] = $power[0]->ON??null; // Lunes
-		$resp['power']['on'][1] = $power[1]->ON??null; // Martes
-		$resp['power']['on'][2] = $power[2]->ON??null; // Miercoles
-		$resp['power']['on'][3] = $power[3]->ON??null; // Jueves
-		$resp['power']['on'][4] = $power[4]->ON??null; // Viernes
-		$resp['power']['on'][5] = $power[5]->ON??null; // Sabado
-		$resp['power']['on'][6] = $power[6]->ON??null; // Domingo
+        if ($playlist->zonaGuardias != 0) {
+            for ($i=0;$i<7;$i++) {
+                $resp['power']['on'][$i] = null;
+                $resp['power']['off'][$i] = null;
+            }
+        } else {
+            // ------- Encendido ------
+		    $resp['power']['on'][0] = $power[0]->ON??null; // Lunes
+		    $resp['power']['on'][1] = $power[1]->ON??null; // Martes
+		    $resp['power']['on'][2] = $power[2]->ON??null; // Miercoles
+		    $resp['power']['on'][3] = $power[3]->ON??null; // Jueves
+		    $resp['power']['on'][4] = $power[4]->ON??null; // Viernes
+		    $resp['power']['on'][5] = $power[5]->ON??null; // Sabado
+		    $resp['power']['on'][6] = $power[6]->ON??null; // Domingo
+            
+            
+		    // ------- Apagado ------
+		    $resp['power']['off'][0] = $power[0]->OFF??null; // Lunes
+		    $resp['power']['off'][1] = $power[1]->OFF??null; // Martes
+		    $resp['power']['off'][2] = $power[2]->OFF??null; // Miercoles
+		    $resp['power']['off'][3] = $power[3]->OFF??null; // Jueves
+		    $resp['power']['off'][4] = $power[4]->OFF??null; // Viernes
+		    $resp['power']['off'][5] = $power[5]->OFF??null; // Sabado
+		    $resp['power']['off'][6] = $power[6]->OFF??null; // Domingo
+        }
 		
-		
-		// ------- Apagado ------
-		$resp['power']['off'][0] = $power[0]->OFF??null; // Lunes
-		$resp['power']['off'][1] = $power[1]->OFF??null; // Martes
-		$resp['power']['off'][2] = $power[2]->OFF??null; // Miercoles
-		$resp['power']['off'][3] = $power[3]->OFF??null; // Jueves
-		$resp['power']['off'][4] = $power[4]->OFF??null; // Viernes
-		$resp['power']['off'][5] = $power[5]->OFF??null; // Sabado
-		$resp['power']['off'][6] = $power[6]->OFF??null; // Domingo
 
     // ================== POWER > ==================
     
