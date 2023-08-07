@@ -56,7 +56,9 @@
                             </select>
                         </div>
                     </div>
+                    @if ($uId)
                     <input type="hidden" name="userId" value="{{ $uId }}">
+                    @endif
                 </div>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-primary" value="{{ $modalAction }}">

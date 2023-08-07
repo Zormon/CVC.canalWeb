@@ -12,7 +12,8 @@
         'musicJsonURL' => $playlist->musicURL,
         'screenW' => $playlist->screenW,
         'screenH' => $playlist->screenH,
-        'zonaGuardias' => $playlist->zonaGuardias
+        'zonaGuardias' => $playlist->zonaGuardias,
+        'uId' => false
     ])
     @include('modals.deletePlaylist')
 @endif
