@@ -10,7 +10,7 @@
                     <div class="form-group row">
                         <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('User') }}</label>
                         <div class="col-md-6">
-                            <input type="text" class="form-control" name="username" pattern="[a-zA-Z]+" required>
+                            <input type="text" class="form-control" name="username" required>
                         </div>
                     </div>
                     <div class="form-group row">
